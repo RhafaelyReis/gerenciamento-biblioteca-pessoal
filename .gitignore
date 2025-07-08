@@ -1,0 +1,46 @@
+# Ignorar a pasta target, onde os arquivos compilados e pacotes são gerados
+target/
+
+# Ignorar arquivos de IDEs (muito comuns em projetos Java)
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignorar arquivos de logs
+*.log
+logs/
+
+# Ignorar arquivos temporários e de backup
+*.tmp
+*.bak
+*~
+*.swp
+*.swo
+
+# Ignorar arquivos de build específicos do sistema (se aplicável, como no macOS)
+.DS_Store
+
+# Ignorar arquivos de ambiente virtual (se usar para Python, por exemplo, mas bom ter)
+venv/
+.venv/
+
+# Ignorar arquivos de metadados do Maven/Gradle (se usar no futuro)
+# .gradle/
+# build/
+# out/
+# pom.xml.tag
+# pom.xml.releaseBackup
+# pom.xml.versionsBackup
+# pom.xml.next
+# release.properties
+# dependency-reduced-pom.xml
+# *.jar.original
+# *.war.original
+# *.ear.original
+
+# Ignorar arquivos de classes gerados diretamente no diretório fonte (se acontecer)
+*.class
