@@ -44,3 +44,6 @@ venv/
 
 # Ignorar arquivos de classes gerados diretamente no diretório fonte (se acontecer)
 *.class
+
+.vscode/
+docs/learning/
