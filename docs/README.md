@@ -1,5 +1,9 @@
 # 📚 Gerenciamento de Biblioteca Pessoal
 
+## 🚧 Status do Projeto
+
+**🔄 EM ANDAMENTO** - O projeto está sendo desenvolvido e aprimorado continuamente.
+
 ## Descrição do Projeto
 
 Sistema de gerenciamento de biblioteca pessoal desenvolvido em Java com interface gráfica Java Swing. Esta solução foi criada para ajudar usuários a gerenciar sua coleção pessoal de livros, ebooks e audiobooks de forma simples e intuitiva, oferecendo funcionalidades completas para catalogação, avaliação e acompanhamento de leitura.
