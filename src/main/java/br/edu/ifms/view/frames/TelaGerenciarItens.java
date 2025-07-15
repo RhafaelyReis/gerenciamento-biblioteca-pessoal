@@ -140,7 +140,7 @@ public class TelaGerenciarItens extends JPanel {
                 livro.getTitulo(),
                 livro.getAutor(),
                 livro.isLido() ? "Sim" : "Não",
-                livro.getNota().getEstrelas()
+                livro.getNota().getDescricao()
             };
             modeloLivros.addRow(linha);
         }
@@ -152,7 +152,7 @@ public class TelaGerenciarItens extends JPanel {
                 ebook.getTitulo(),
                 ebook.getAutor(),
                 ebook.isLido() ? "Sim" : "Não",
-                ebook.getNota().getEstrelas()
+                ebook.getNota().getDescricao()
             };
             modeloEbooks.addRow(linha);
         }
@@ -164,7 +164,7 @@ public class TelaGerenciarItens extends JPanel {
                 audiobook.getTitulo(),
                 audiobook.getAutor(),
                 audiobook.isLido() ? "Sim" : "Não",
-                audiobook.getNota().getEstrelas()
+                audiobook.getNota().getDescricao()
             };
             modeloAudiobooks.addRow(linha);
         }
@@ -251,7 +251,7 @@ public class TelaGerenciarItens extends JPanel {
     }
 
     private void abrirTelaAvaliacao(Item item) {
-        String[] opcoes = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"};
+        String[] opcoes = {"★", "★★", "★★★", "★★★★", "★★★★★"};
         String avaliacao = (String) JOptionPane.showInputDialog(this,
             "Como você avalia '" + item.getTitulo() + "'?",
             "Avaliar Item",
@@ -262,19 +262,19 @@ public class TelaGerenciarItens extends JPanel {
 
         if (avaliacao != null) {
             switch (avaliacao) {
-                case "⭐":
+                case "★":
                     item.setNota(Nota.UMA_ESTRELA);
                     break;
-                case "⭐⭐":
+                case "★★":
                     item.setNota(Nota.DUAS_ESTRELAS);
                     break;
-                case "⭐⭐⭐":
+                case "★★★":
                     item.setNota(Nota.TRES_ESTRELAS);
                     break;
-                case "⭐⭐⭐⭐":
+                case "★★★★":
                     item.setNota(Nota.QUATRO_ESTRELAS);
                     break;
-                case "⭐⭐⭐⭐⭐":
+                case "★★★★★":
                     item.setNota(Nota.CINCO_ESTRELAS);
                     break;
             }
@@ -369,7 +369,7 @@ public class TelaGerenciarItens extends JPanel {
                         livro.getTitulo(),
                         livro.getAutor(),
                         livro.isLido() ? "Sim" : "Não",
-                        livro.getNota().getEstrelas()
+                        livro.getNota().getDescricao()
                     };
                     modeloLivros.addRow(linha);
                 }
@@ -382,7 +382,7 @@ public class TelaGerenciarItens extends JPanel {
                         ebook.getTitulo(),
                         ebook.getAutor(),
                         ebook.isLido() ? "Sim" : "Não",
-                        ebook.getNota().getEstrelas()
+                        ebook.getNota().getDescricao()
                     };
                     modeloEbooks.addRow(linha);
                 }
@@ -395,7 +395,7 @@ public class TelaGerenciarItens extends JPanel {
                         audiobook.getTitulo(),
                         audiobook.getAutor(),
                         audiobook.isLido() ? "Sim" : "Não",
-                        audiobook.getNota().getEstrelas()
+                        audiobook.getNota().getDescricao()
                     };
                     modeloAudiobooks.addRow(linha);
                 }
@@ -403,7 +403,6 @@ public class TelaGerenciarItens extends JPanel {
         }
     }
 
-    // Método para obter o container de conteúdo (necessário para o CardLayout)
     public Container getContentPane() {
         return this;
     }
