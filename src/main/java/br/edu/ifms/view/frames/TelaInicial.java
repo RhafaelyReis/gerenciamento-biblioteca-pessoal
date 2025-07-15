@@ -7,6 +7,11 @@ import java.awt.*;
 
 public class TelaInicial extends JFrame {
     
+    private CardLayout cardLayout;
+    private JPanel painelPrincipal;
+    private static final String TELA_MENU = "MENU";
+    private static final String TELA_GERENCIAR = "GERENCIAR";
+    
     public TelaInicial() {
         initComponents();
     }
@@ -15,13 +20,32 @@ public class TelaInicial extends JFrame {
         // Configuração da janela
         setTitle("Biblioteca Pessoal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(800, 600);
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setBackground(StyleConstants.SECONDARY_COLOR);
         
-        // Layout principal
-        setLayout(new BorderLayout());
+        // Configurar CardLayout
+        cardLayout = new CardLayout();
+        painelPrincipal = new JPanel(cardLayout);
+        
+        // Criar os painéis
+        JPanel painelMenu = criarPainelMenu();
+        TelaGerenciarItens telaGerenciar = new TelaGerenciarItens(this);
+        
+        // Adicionar painéis ao CardLayout
+        painelPrincipal.add(painelMenu, TELA_MENU);
+        painelPrincipal.add(telaGerenciar.getContentPane(), TELA_GERENCIAR);
+        
+        add(painelPrincipal);
+        
+        // Mostrar tela inicial
+        cardLayout.show(painelPrincipal, TELA_MENU);
+    }
+    
+    private JPanel criarPainelMenu() {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBackground(StyleConstants.SECONDARY_COLOR);
         
         // Título
         JLabel titulo = new JLabel("Sistema de Biblioteca Pessoal");
@@ -29,7 +53,7 @@ public class TelaInicial extends JFrame {
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
-        add(titulo, BorderLayout.NORTH);
+        painel.add(titulo, BorderLayout.NORTH);
         
         // Painel dos botões
         JPanel painelBotoes = new JPanel(new GridBagLayout());
@@ -60,7 +84,7 @@ public class TelaInicial extends JFrame {
         gbc.insets = new Insets(20, 0, 10, 0);
         painelBotoes.add(btnSair, gbc);
         
-        add(painelBotoes, BorderLayout.CENTER);
+        painel.add(painelBotoes, BorderLayout.CENTER);
         
         // Rodapé
         JLabel rodape = new JLabel("Gerencie sua biblioteca pessoal");
@@ -68,10 +92,12 @@ public class TelaInicial extends JFrame {
         rodape.setForeground(StyleConstants.PRIMARY_COLOR);
         rodape.setHorizontalAlignment(SwingConstants.CENTER);
         rodape.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-        add(rodape, BorderLayout.SOUTH);
+        painel.add(rodape, BorderLayout.SOUTH);
         
         // Configuração dos eventos
         configurarEventos(btnGerenciarItens, btnMetricas, btnMeusItens, btnSair);
+        
+        return painel;
     }
     
     private JButton criarBotao(String texto, boolean isDanger) {
@@ -97,15 +123,15 @@ public class TelaInicial extends JFrame {
     }
     
     private void abrirGerenciarItens() {
-        
+        cardLayout.show(painelPrincipal, TELA_GERENCIAR);
     }
     
     private void abrirMetricas() {
-        
+        JOptionPane.showMessageDialog(this, "Tela de Métricas ainda não implementada");
     }
     
     private void abrirMeusItens() {
-        
+        JOptionPane.showMessageDialog(this, "Tela de Meus Itens ainda não implementada");
     }
     
     private void sairAplicacao() {
@@ -117,6 +143,11 @@ public class TelaInicial extends JFrame {
         if (resposta == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
+    }
+    
+    // Método para voltar ao menu principal
+    public void voltarParaMenu() {
+        cardLayout.show(painelPrincipal, TELA_MENU);
     }
     
     public static void main(String[] args) {
