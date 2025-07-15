@@ -88,7 +88,7 @@ public class TelaGerenciarItens extends JPanel {
         // Criar TabbedPane
         tabbedPane = new JTabbedPane();
         tabbedPane.setFont(StyleConstants.FONT_BOLD);
-        tabbedPane.setBackground(StyleConstants.SECONDARY_COLOR);
+        tabbedPane.setBackground(StyleConstants.SECONDARY_HOVER);
         tabbedPane.setForeground(StyleConstants.PRIMARY_COLOR);
 
         // Criar e adicionar abas usando as novas classes de painel
@@ -317,5 +317,19 @@ public class TelaGerenciarItens extends JPanel {
 
     public Container getContentPane() {
         return this;
+    }
+
+    // Adicione estes métodos getter no final da classe TelaGerenciarItens:
+
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
+    public List<Ebook> getEbooks() {
+        return ebooks;
+    }
+
+    public List<Audiobook> getAudiobooks() {
+        return audiobooks;
     }
 }

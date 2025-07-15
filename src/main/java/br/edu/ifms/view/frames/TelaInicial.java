@@ -11,6 +11,13 @@ public class TelaInicial extends JFrame {
     private JPanel painelPrincipal;
     private static final String TELA_MENU = "MENU";
     private static final String TELA_GERENCIAR = "GERENCIAR";
+    private static final String TELA_METRICAS = "METRICAS";
+    private static final String TELA_MEUS_ITENS = "MEUS_ITENS";
+    
+    // Referências para as telas
+    private TelaGerenciarItens telaGerenciar;
+    private TelaMetricas telaMetricas;
+    private TelaMeusItens telaMeusItens;
     
     public TelaInicial() {
         initComponents();
@@ -20,18 +27,18 @@ public class TelaInicial extends JFrame {
         // Configuração da janela
         setTitle("Biblioteca Pessoal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 800);
         setLocationRelativeTo(null);
-        setResizable(false);
+        // setResizable(false);
         getContentPane().setBackground(StyleConstants.SECONDARY_COLOR);
         
         // Configurar CardLayout
         cardLayout = new CardLayout();
         painelPrincipal = new JPanel(cardLayout);
         
-        // Criar os painéis
+        // Criar as telas
         JPanel painelMenu = criarPainelMenu();
-        TelaGerenciarItens telaGerenciar = new TelaGerenciarItens(this);
+        telaGerenciar = new TelaGerenciarItens(this);
         
         // Adicionar painéis ao CardLayout
         painelPrincipal.add(painelMenu, TELA_MENU);
@@ -66,9 +73,16 @@ public class TelaInicial extends JFrame {
         
         // Criação e configuração inicial dos botões
         JButton btnGerenciarItens = criarBotao("Gerenciar Itens", false);
+        btnGerenciarItens.setToolTipText("Adicione, edite ou remova livros, ebooks e audiobooks.");
+        
         JButton btnMetricas = criarBotao("Métricas", false);
+        btnMetricas.setToolTipText("Visualize estatísticas sobre sua coleção.");
+        
         JButton btnMeusItens = criarBotao("Meus Itens", false);
+        btnMeusItens.setToolTipText("Veja todos os itens da sua biblioteca em um só lugar.");
+        
         JButton btnSair = criarBotao("Sair", true);
+        btnSair.setToolTipText("Encerrar o aplicativo.");
         
         // Adicionando os botões ao painel e configurando a posição
         gbc.gridy = 0;
@@ -114,7 +128,7 @@ public class TelaInicial extends JFrame {
     }
     
     private void configurarEventos(JButton btnGerenciarItens, JButton btnMetricas, 
-                                  JButton btnMeusItens, JButton btnSair) {
+                                   JButton btnMeusItens, JButton btnSair) {
         
         btnGerenciarItens.addActionListener(e -> abrirGerenciarItens());
         btnMetricas.addActionListener(e -> abrirMetricas());
@@ -127,11 +141,35 @@ public class TelaInicial extends JFrame {
     }
     
     private void abrirMetricas() {
-        JOptionPane.showMessageDialog(this, "Tela de Métricas ainda não implementada");
+        // Criar ou recriar a tela de métricas com dados atualizados
+        if (telaMetricas != null) {
+            painelPrincipal.remove(telaMetricas.getContentPane());
+        }
+        
+        // Obter dados atualizados da tela de gerenciamento
+        telaMetricas = new TelaMetricas(this, 
+                                       telaGerenciar.getLivros(), 
+                                       telaGerenciar.getEbooks(), 
+                                       telaGerenciar.getAudiobooks());
+        
+        painelPrincipal.add(telaMetricas.getContentPane(), TELA_METRICAS);
+        cardLayout.show(painelPrincipal, TELA_METRICAS);
     }
     
     private void abrirMeusItens() {
-        JOptionPane.showMessageDialog(this, "Tela de Meus Itens ainda não implementada");
+        // Criar ou recriar a tela de meus itens com dados atualizados
+        if (telaMeusItens != null) {
+            painelPrincipal.remove(telaMeusItens);
+        }
+        
+        // Obter dados atualizados da tela de gerenciamento
+        telaMeusItens = new TelaMeusItens(this, 
+                                         telaGerenciar.getLivros(), 
+                                         telaGerenciar.getEbooks(), 
+                                         telaGerenciar.getAudiobooks());
+        
+        painelPrincipal.add(telaMeusItens, TELA_MEUS_ITENS);
+        cardLayout.show(painelPrincipal, TELA_MEUS_ITENS);
     }
     
     private void sairAplicacao() {
