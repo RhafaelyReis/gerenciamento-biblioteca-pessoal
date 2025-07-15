@@ -168,7 +168,7 @@ public class PainelEbook {
         painelBotoes.setBackground(StyleConstants.SECONDARY_COLOR);
 
         JButton btnAdicionar = new JButton("Adicionar");
-        JButton btnAtualizar = new JButton("Atualizar");
+        JButton btnAtualizar = new JButton("Salvar");
         JButton btnRemover = new JButton("Remover");
 
         ButtonStyles.applyDefaultStyle(btnAdicionar);
