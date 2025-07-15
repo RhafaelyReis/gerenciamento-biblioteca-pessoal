@@ -2,7 +2,6 @@ package br.edu.ifms.view.panels;
 
 import br.edu.ifms.model.Genero;
 import br.edu.ifms.model.Livro;
-import br.edu.ifms.model.Nota;
 import br.edu.ifms.view.styles.ButtonStyles;
 import br.edu.ifms.view.styles.StyleConstants;
 
@@ -24,20 +23,18 @@ public class PainelLivro {
     private JTextField txtAutor;
     private JTextField txtAno;
     private JComboBox<Genero> comboGenero;
-    private JTextField txtDescricao;
+    private JTextArea txtDescricao;
     private JTextField txtPaginas;
     private JTextField txtIsbn;
 
-    // Botões específicos para a tela principal (marcar lido e ver detalhes)
+    // Botões específicos para a tela principal (marcar lido)
     private JButton btnMarcarLidoLivro;
-    private JButton btnEditarLivro;
 
 
-    public PainelLivro(List<Livro> livros, Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoLivro, JButton btnEditarLivro) {
+    public PainelLivro(List<Livro> livros, Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoLivro) {
         this.livros = livros;
         this.atualizarTabelaCallback = atualizarTabelaCallback;
         this.btnMarcarLidoLivro = btnMarcarLidoLivro;
-        this.btnEditarLivro = btnEditarLivro;
     }
 
     public JPanel criarPainelLivros() {
@@ -46,33 +43,115 @@ public class PainelLivro {
         painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Painel de formulário
-        JPanel painelFormulario = new JPanel(new GridLayout(3, 4, 10, 10));
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBackground(StyleConstants.SECONDARY_COLOR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2); // Reduzido o espaço interno
+        gbc.anchor = GridBagConstraints.WEST; // Alinha os componentes à esquerda
 
-        txtTitulo = new JTextField();
-        txtAutor = new JTextField();
-        txtAno = new JTextField();
+        txtTitulo = new JTextField(20);
+        txtAutor = new JTextField(20);
+        txtAno = new JTextField(20);
         comboGenero = new JComboBox<>(Genero.values());
-        txtDescricao = new JTextField();
-        txtPaginas = new JTextField();
-        txtIsbn = new JTextField();
+        txtDescricao = new JTextArea(3, 20);
+        txtDescricao.setLineWrap(true);
+        txtDescricao.setWrapStyleWord(true);
+        JScrollPane scrollDescricao = new JScrollPane(txtDescricao);
+        txtPaginas = new JTextField(20);
+        txtIsbn = new JTextField(20);
 
-        painelFormulario.add(new JLabel("Título:"));
-        painelFormulario.add(txtTitulo);
-        painelFormulario.add(new JLabel("Autor:"));
-        painelFormulario.add(txtAutor);
-        painelFormulario.add(new JLabel("Ano:"));
-        painelFormulario.add(txtAno);
-        painelFormulario.add(new JLabel("Gênero:"));
-        painelFormulario.add(comboGenero);
-        painelFormulario.add(new JLabel("Descrição:"));
-        painelFormulario.add(txtDescricao);
-        painelFormulario.add(new JLabel("Páginas:"));
-        painelFormulario.add(txtPaginas);
-        painelFormulario.add(new JLabel("ISBN:"));
-        painelFormulario.add(txtIsbn);
+        // Título
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Título:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtTitulo, gbc);
+
+        // Autor
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Autor:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtAutor, gbc);
+
+        // Ano
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Ano:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtAno, gbc);
+
+        // Gênero
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Gênero:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(comboGenero, gbc);
+
+        // Descrição
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Descrição:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        painelFormulario.add(scrollDescricao, gbc);
+
+        // Páginas
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Páginas:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtPaginas, gbc);
+
+        // ISBN
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("ISBN:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtIsbn, gbc);
 
         painel.add(painelFormulario, BorderLayout.NORTH);
+
+        // Adicionar um espaçador vertical
+        painel.add(Box.createVerticalStrut(20), BorderLayout.CENTER);
+
+        // Painel para o título da tabela e a tabela em si
+        JPanel painelTabelaContainer = new JPanel(new BorderLayout());
+        painelTabelaContainer.setBackground(StyleConstants.SECONDARY_COLOR);
+        painelTabelaContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+        JLabel tituloTabela = new JLabel("Lista de Livros");
+        tituloTabela.setFont(StyleConstants.FONT_BOLD);
+        tituloTabela.setForeground(StyleConstants.PRIMARY_COLOR);
+        tituloTabela.setHorizontalAlignment(SwingConstants.CENTER);
+        painelTabelaContainer.add(tituloTabela, BorderLayout.NORTH);
 
         // Criar tabela
         String[] colunas = {"ID", "Título", "Autor", "Lido", "Avaliação"};
@@ -93,10 +172,12 @@ public class PainelLivro {
 
         JScrollPane scrollPane = new JScrollPane(tabelaLivros);
         scrollPane.setPreferredSize(new Dimension(750, 200));
-        painel.add(scrollPane, BorderLayout.CENTER);
+        painelTabelaContainer.add(scrollPane, BorderLayout.CENTER);
+
+        painel.add(painelTabelaContainer, BorderLayout.CENTER);
 
         // Painel de botões
-        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Centraliza os botões
         painelBotoes.setBackground(StyleConstants.SECONDARY_COLOR);
 
         JButton btnAdicionar = new JButton("Adicionar");
@@ -106,18 +187,16 @@ public class PainelLivro {
         ButtonStyles.applyDefaultStyle(btnAdicionar);
         ButtonStyles.applyDefaultStyle(btnAtualizar);
         ButtonStyles.applyDangerStyle(btnRemover);
-        ButtonStyles.applyDefaultStyle(btnMarcarLidoLivro); // Este botão vem da TelaGerenciarItens
-        ButtonStyles.applyDefaultStyle(btnEditarLivro); // Este botão vem da TelaGerenciarItens
+        ButtonStyles.applyDefaultStyle(btnMarcarLidoLivro);
 
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnAtualizar);
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnMarcarLidoLivro);
-        painelBotoes.add(btnEditarLivro);
 
         painel.add(painelBotoes, BorderLayout.SOUTH);
 
-        // Eventos CRUD
+        // Eventos CRUD (mantidos como antes)
         btnAdicionar.addActionListener(e -> {
             try {
                 String titulo = txtTitulo.getText();
@@ -130,7 +209,7 @@ public class PainelLivro {
 
                 Livro novo = new Livro(titulo, autor, ano, genero, descricao, paginas, isbn);
                 livros.add(novo);
-                atualizarTabelaCallback.accept("livro"); // Chama o callback para atualizar a tabela principal
+                atualizarTabelaCallback.accept("livro");
 
                 // Limpar campos
                 txtTitulo.setText("");
@@ -149,7 +228,7 @@ public class PainelLivro {
         btnRemover.addActionListener(e -> {
             int linha = tabelaLivros.getSelectedRow();
             if (linha >= 0) {
-                int id = (Integer) modeloLivros.getValueAt(linha, 0); // Use modeloLivros aqui
+                int id = (Integer) modeloLivros.getValueAt(linha, 0);
                 livros.removeIf(livro -> livro.getId() == id);
                 atualizarTabelaCallback.accept("livro");
             } else {
@@ -161,7 +240,7 @@ public class PainelLivro {
             int linha = tabelaLivros.getSelectedRow();
             if (linha >= 0) {
                 try {
-                    int id = (Integer) modeloLivros.getValueAt(linha, 0); // Use modeloLivros aqui
+                    int id = (Integer) modeloLivros.getValueAt(linha, 0);
                     for (Livro livro : livros) {
                         if (livro.getId() == id) {
                             livro.setTitulo(txtTitulo.getText());
@@ -190,7 +269,6 @@ public class PainelLivro {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = tabelaLivros.getSelectedRow();
                 if (selectedRow != -1) {
-                    // O ID está na coluna 0, mas precisamos encontrar o objeto Livro real
                     int idSelecionado = (Integer) modeloLivros.getValueAt(selectedRow, 0);
                     Livro livroSelecionado = livros.stream()
                                                   .filter(l -> l.getId() == idSelecionado)

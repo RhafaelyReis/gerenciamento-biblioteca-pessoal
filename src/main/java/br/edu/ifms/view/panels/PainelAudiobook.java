@@ -2,7 +2,6 @@ package br.edu.ifms.view.panels;
 
 import br.edu.ifms.model.Audiobook;
 import br.edu.ifms.model.Genero;
-import br.edu.ifms.model.Nota;
 import br.edu.ifms.view.styles.ButtonStyles;
 import br.edu.ifms.view.styles.StyleConstants;
 
@@ -24,19 +23,17 @@ public class PainelAudiobook {
     private JTextField txtAutor;
     private JTextField txtAno;
     private JComboBox<Genero> comboGenero;
-    private JTextField txtDescricao;
+    private JTextArea txtDescricao;
     private JTextField txtDuracaoMinutos;
     private JTextField txtNarrador;
 
-    // Botões específicos para a tela principal (marcar lido e ver detalhes)
+    // Botões específicos para a tela principal (marcar lido)
     private JButton btnMarcarLidoAudiobook;
-    private JButton btnEditarAudiobook;
 
-    public PainelAudiobook(List<Audiobook> audiobooks, Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoAudiobook, JButton btnEditarAudiobook) {
+    public PainelAudiobook(List<Audiobook> audiobooks, Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoAudiobook) {
         this.audiobooks = audiobooks;
         this.atualizarTabelaCallback = atualizarTabelaCallback;
         this.btnMarcarLidoAudiobook = btnMarcarLidoAudiobook;
-        this.btnEditarAudiobook = btnEditarAudiobook;
     }
 
     public JPanel criarPainelAudiobooks() {
@@ -45,33 +42,115 @@ public class PainelAudiobook {
         painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Painel de formulário
-        JPanel painelFormulario = new JPanel(new GridLayout(3, 4, 10, 10));
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBackground(StyleConstants.SECONDARY_COLOR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2); // Reduzido o espaço interno
+        gbc.anchor = GridBagConstraints.WEST; // Alinha os componentes à esquerda
 
-        txtTitulo = new JTextField();
-        txtAutor = new JTextField();
-        txtAno = new JTextField();
+        txtTitulo = new JTextField(20);
+        txtAutor = new JTextField(20);
+        txtAno = new JTextField(20);
         comboGenero = new JComboBox<>(Genero.values());
-        txtDescricao = new JTextField();
-        txtDuracaoMinutos = new JTextField();
-        txtNarrador = new JTextField();
+        txtDescricao = new JTextArea(3, 20);
+        txtDescricao.setLineWrap(true);
+        txtDescricao.setWrapStyleWord(true);
+        JScrollPane scrollDescricao = new JScrollPane(txtDescricao);
+        txtDuracaoMinutos = new JTextField(20);
+        txtNarrador = new JTextField(20);
 
-        painelFormulario.add(new JLabel("Título:"));
-        painelFormulario.add(txtTitulo);
-        painelFormulario.add(new JLabel("Autor:"));
-        painelFormulario.add(txtAutor);
-        painelFormulario.add(new JLabel("Ano:"));
-        painelFormulario.add(txtAno);
-        painelFormulario.add(new JLabel("Gênero:"));
-        painelFormulario.add(comboGenero);
-        painelFormulario.add(new JLabel("Descrição:"));
-        painelFormulario.add(txtDescricao);
-        painelFormulario.add(new JLabel("Duração (min):"));
-        painelFormulario.add(txtDuracaoMinutos);
-        painelFormulario.add(new JLabel("Narrador:"));
-        painelFormulario.add(txtNarrador);
+        // Título
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Título:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtTitulo, gbc);
+
+        // Autor
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Autor:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtAutor, gbc);
+
+        // Ano
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Ano:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtAno, gbc);
+
+        // Gênero
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Gênero:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(comboGenero, gbc);
+
+        // Descrição
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Descrição:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        painelFormulario.add(scrollDescricao, gbc);
+
+        // Duração (min)
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Duração (min):"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtDuracaoMinutos, gbc);
+
+        // Narrador
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        painelFormulario.add(new JLabel("Narrador:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        painelFormulario.add(txtNarrador, gbc);
 
         painel.add(painelFormulario, BorderLayout.NORTH);
+
+        // Adicionar um espaçador vertical
+        painel.add(Box.createVerticalStrut(20), BorderLayout.CENTER);
+
+        // Painel para o título da tabela e a tabela em si
+        JPanel painelTabelaContainer = new JPanel(new BorderLayout());
+        painelTabelaContainer.setBackground(StyleConstants.SECONDARY_COLOR);
+        painelTabelaContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+        JLabel tituloTabela = new JLabel("Lista de Audiobooks");
+        tituloTabela.setFont(StyleConstants.FONT_BOLD);
+        tituloTabela.setForeground(StyleConstants.PRIMARY_COLOR);
+        tituloTabela.setHorizontalAlignment(SwingConstants.CENTER);
+        painelTabelaContainer.add(tituloTabela, BorderLayout.NORTH);
 
         // Criar tabela
         String[] colunas = {"ID", "Título", "Autor", "Lido", "Avaliação"};
@@ -92,10 +171,12 @@ public class PainelAudiobook {
 
         JScrollPane scrollPane = new JScrollPane(tabelaAudiobooks);
         scrollPane.setPreferredSize(new Dimension(750, 200));
-        painel.add(scrollPane, BorderLayout.CENTER);
+        painelTabelaContainer.add(scrollPane, BorderLayout.CENTER);
+
+        painel.add(painelTabelaContainer, BorderLayout.CENTER);
 
         // Painel de botões
-        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Centraliza os botões
         painelBotoes.setBackground(StyleConstants.SECONDARY_COLOR);
 
         JButton btnAdicionar = new JButton("Adicionar");
@@ -106,17 +187,15 @@ public class PainelAudiobook {
         ButtonStyles.applyDefaultStyle(btnAtualizar);
         ButtonStyles.applyDangerStyle(btnRemover);
         ButtonStyles.applyDefaultStyle(btnMarcarLidoAudiobook);
-        ButtonStyles.applyDefaultStyle(btnEditarAudiobook);
 
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnAtualizar);
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnMarcarLidoAudiobook);
-        painelBotoes.add(btnEditarAudiobook);
 
         painel.add(painelBotoes, BorderLayout.SOUTH);
 
-        // Eventos CRUD
+        // Eventos CRUD (mantidos como antes)
         btnAdicionar.addActionListener(e -> {
             try {
                 String titulo = txtTitulo.getText();
