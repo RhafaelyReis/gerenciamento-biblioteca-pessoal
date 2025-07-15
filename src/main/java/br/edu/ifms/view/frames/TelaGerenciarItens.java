@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class TelaGerenciarItens extends JPanel {
 
@@ -32,11 +31,8 @@ public class TelaGerenciarItens extends JPanel {
 
     // Botões (serão passados para os painéis)
     private JButton btnMarcarLidoLivro;
-    private JButton btnEditarLivro;
     private JButton btnMarcarLidoEbook;
-    private JButton btnEditarEbook;
     private JButton btnMarcarLidoAudiobook;
-    private JButton btnEditarAudiobook;
     private JButton btnVoltar;
 
     // Referência para a tela principal
@@ -86,11 +82,8 @@ public class TelaGerenciarItens extends JPanel {
 
         // Inicializar botões que serão passados para os painéis
         btnMarcarLidoLivro = new JButton("Marcar como Lido");
-        btnEditarLivro = new JButton("Ver Detalhes");
         btnMarcarLidoEbook = new JButton("Marcar como Lido");
-        btnEditarEbook = new JButton("Ver Detalhes");
         btnMarcarLidoAudiobook = new JButton("Marcar como Lido");
-        btnEditarAudiobook = new JButton("Ver Detalhes");
 
         // Criar TabbedPane
         tabbedPane = new JTabbedPane();
@@ -100,17 +93,17 @@ public class TelaGerenciarItens extends JPanel {
 
         // Criar e adicionar abas usando as novas classes de painel
         // O Consumer<String> é o callback para o método atualizarTabela
-        PainelLivro painelLivro = new PainelLivro(livros, this::atualizarTabela, btnMarcarLidoLivro, btnEditarLivro);
+        PainelLivro painelLivro = new PainelLivro(livros, this::atualizarTabela, btnMarcarLidoLivro);
         tabbedPane.addTab("Livros", painelLivro.criarPainelLivros());
         this.modeloLivros = painelLivro.getModeloLivros();
         this.tabelaLivros = painelLivro.getTabelaLivros();
 
-        PainelEbook painelEbook = new PainelEbook(ebooks, this::atualizarTabela, btnMarcarLidoEbook, btnEditarEbook);
+        PainelEbook painelEbook = new PainelEbook(ebooks, this::atualizarTabela, btnMarcarLidoEbook);
         tabbedPane.addTab("Ebooks", painelEbook.criarPainelEbooks());
         this.modeloEbooks = painelEbook.getModeloEbooks();
         this.tabelaEbooks = painelEbook.getTabelaEbooks();
 
-        PainelAudiobook painelAudiobook = new PainelAudiobook(audiobooks, this::atualizarTabela, btnMarcarLidoAudiobook, btnEditarAudiobook);
+        PainelAudiobook painelAudiobook = new PainelAudiobook(audiobooks, this::atualizarTabela, btnMarcarLidoAudiobook);
         tabbedPane.addTab("Audiobooks", painelAudiobook.criarPainelAudiobooks());
         this.modeloAudiobooks = painelAudiobook.getModeloAudiobooks();
         this.tabelaAudiobooks = painelAudiobook.getTabelaAudiobooks();
@@ -173,15 +166,12 @@ public class TelaGerenciarItens extends JPanel {
     private void configurarEventos() {
         // Eventos dos botões de livros
         btnMarcarLidoLivro.addActionListener(e -> marcarComoLido("livro"));
-        btnEditarLivro.addActionListener(e -> editarItem("livro"));
 
         // Eventos dos botões de ebooks
         btnMarcarLidoEbook.addActionListener(e -> marcarComoLido("ebook"));
-        btnEditarEbook.addActionListener(e -> editarItem("ebook"));
 
         // Eventos dos botões de audiobooks
         btnMarcarLidoAudiobook.addActionListener(e -> marcarComoLido("audiobook"));
-        btnEditarAudiobook.addActionListener(e -> editarItem("audiobook"));
 
         // Evento do botão voltar
         btnVoltar.addActionListener(e -> {
@@ -279,84 +269,6 @@ public class TelaGerenciarItens extends JPanel {
                     break;
             }
         }
-    }
-
-    private void editarItem(String tipo) {
-        JTable tabela = null;
-        List<? extends Item> lista = null;
-
-        switch (tipo) {
-            case "livro":
-                tabela = tabelaLivros;
-                lista = livros;
-                break;
-            case "ebook":
-                tabela = tabelaEbooks;
-                lista = ebooks;
-                break;
-            case "audiobook":
-                tabela = tabelaAudiobooks;
-                lista = audiobooks;
-                break;
-        }
-
-        if (tabela == null || tabela.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um item para editar.",
-                                        "Nenhum item selecionado", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        int linhaSelecionada = tabela.getSelectedRow();
-        int id = (Integer) tabela.getValueAt(linhaSelecionada, 0);
-
-        // Encontrar o item na lista
-        Item itemSelecionado = null;
-        for (Item item : lista) {
-            if (item.getId() == id) {
-                itemSelecionado = item;
-                break;
-            }
-        }
-
-        if (itemSelecionado != null) {
-            mostrarDetalhesItem(itemSelecionado);
-        }
-    }
-
-    private void mostrarDetalhesItem(Item item) {
-        StringBuilder detalhes = new StringBuilder();
-        detalhes.append("ID: ").append(item.getId()).append("\n");
-        detalhes.append("Título: ").append(item.getTitulo()).append("\n");
-        detalhes.append("Autor: ").append(item.getAutor()).append("\n");
-        detalhes.append("Ano: ").append(item.getAnoPublicacao()).append("\n");
-        detalhes.append("Gênero: ").append(item.getGenero().toString()).append("\n");
-        detalhes.append("Descrição: ").append(item.getDescricao()).append("\n");
-        detalhes.append("Lido: ").append(item.isLido() ? "Sim" : "Não").append("\n");
-        detalhes.append("Avaliação: ").append(item.getNota().toString()).append("\n");
-
-        // Adicionar detalhes específicos do tipo
-        if (item instanceof Livro) {
-            Livro livro = (Livro) item;
-            detalhes.append("Páginas: ").append(livro.getNumPaginas()).append("\n");
-            detalhes.append("ISBN: ").append(livro.getIsbn()).append("\n");
-        } else if (item instanceof Ebook) {
-            Ebook ebook = (Ebook) item;
-            detalhes.append("Dispositivo: ").append(ebook.getDispositivo()).append("\n");
-        } else if (item instanceof Audiobook) {
-            Audiobook audiobook = (Audiobook) item;
-            detalhes.append("Duração: ").append(audiobook.getDuracaoMinutos()).append(" min\n");
-            detalhes.append("Narrador: ").append(audiobook.getNarrador()).append("\n");
-        }
-
-        JTextArea textArea = new JTextArea(detalhes.toString());
-        textArea.setFont(StyleConstants.FONT);
-        textArea.setEditable(false);
-        textArea.setRows(12);
-        textArea.setColumns(30);
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
-        JOptionPane.showMessageDialog(this, scrollPane, "Detalhes do Item", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void atualizarTabela(String tipo) {
