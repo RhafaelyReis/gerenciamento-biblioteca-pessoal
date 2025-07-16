@@ -17,7 +17,8 @@ public class AudiobookController {
     }
 
     public void initController() {
-        view.getBtnAdicionar().addActionListener(e -> adicionarAudiobook());
+        view.getBtnNovo().addActionListener(e -> view.limparCampos());
+        view.getBtnCancelar().addActionListener(e -> view.limparCampos());
         view.getBtnRemover().addActionListener(e -> removerAudiobook());
         view.getBtnAtualizar().addActionListener(e -> salvarAudiobook());
         view.getTabelaAudiobooks().getSelectionModel().addListSelectionListener(e -> {
@@ -25,34 +26,6 @@ public class AudiobookController {
                 preencherFormularioComAudiobookSelecionado();
             }
         });
-    }
-
-    private void adicionarAudiobook() {
-        try {
-            String titulo = view.getTxtTitulo().getText();
-            String autor = view.getTxtAutor().getText();
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
-            int duracao = Integer.parseInt(view.getTxtDuracaoMinutos().getText());
-            String narrador = view.getTxtNarrador().getText();
-            
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-
-            Audiobook novo = new Audiobook(titulo, autor, ano, genero, descricao, duracao, narrador);
-            audiobooks.add(novo);
-
-            view.getAtualizarTabelaCallback().accept("audiobook");
-            view.limparCampos();
-
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique Ano e Duração.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao adicionar audiobook: " + ex.getMessage());
-        }
     }
 
     private void removerAudiobook() {
@@ -69,29 +42,47 @@ public class AudiobookController {
 
     private void salvarAudiobook() {
         int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
-        if (linhaSelecionada >= 0) {
-            try {
+        try {
+            String titulo = view.getTxtTitulo().getText();
+            String autor = view.getTxtAutor().getText();
+            
+            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
+                view.displayWarning("Título e Autor são obrigatórios.");
+                return;
+            }
+
+            int ano = Integer.parseInt(view.getTxtAno().getText());
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            int duracao = Integer.parseInt(view.getTxtDuracaoMinutos().getText());
+            String narrador = view.getTxtNarrador().getText();
+            
+            if (linhaSelecionada >= 0) {
+                // Atualiza audiobook existente
                 int id = (Integer) view.getModeloAudiobooks().getValueAt(linhaSelecionada, 0);
                 for (Audiobook audiobook : audiobooks) {
                     if (audiobook.getId() == id) {
-                        audiobook.setTitulo(view.getTxtTitulo().getText());
-                        audiobook.setAutor(view.getTxtAutor().getText());
-                        audiobook.setAnoPublicacao(Integer.parseInt(view.getTxtAno().getText()));
-                        audiobook.setGenero((Genero) view.getComboGenero().getSelectedItem());
-                        audiobook.setDescricao(view.getTxtDescricao().getText());
-                        audiobook.setDuracaoMinutos(Integer.parseInt(view.getTxtDuracaoMinutos().getText()));
-                        audiobook.setNarrador(view.getTxtNarrador().getText());
+                        audiobook.setTitulo(titulo);
+                        audiobook.setAutor(autor);
+                        audiobook.setAnoPublicacao(ano);
+                        audiobook.setGenero(genero);
+                        audiobook.setDescricao(descricao);
+                        audiobook.setDuracaoMinutos(duracao);
+                        audiobook.setNarrador(narrador);
                         break;
                     }
                 }
-                view.getAtualizarTabelaCallback().accept("audiobook");
-            } catch (NumberFormatException ex) {
-                view.displayError("Erro de formato numérico. Verifique Ano e Duração.");
-            } catch (Exception ex) {
-                view.displayError("Erro ao atualizar audiobook: " + ex.getMessage());
+            } else {
+                // Adiciona novo audiobook
+                Audiobook novo = new Audiobook(titulo, autor, ano, genero, descricao, duracao, narrador);
+                audiobooks.add(novo);
             }
-        } else {
-            view.displayWarning("Selecione um audiobook para atualizar.");
+            view.getAtualizarTabelaCallback().accept("audiobook");
+            view.limparCampos();
+        } catch (NumberFormatException ex) {
+            view.displayError("Erro de formato numérico. Verifique Ano e Duração.");
+        } catch (Exception ex) {
+            view.displayError("Erro ao salvar audiobook: " + ex.getMessage());
         }
     }
 

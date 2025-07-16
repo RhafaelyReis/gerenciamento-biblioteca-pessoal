@@ -19,7 +19,7 @@ public class PainelLivro {
     private JComboBox<Genero> comboGenero;
     private JTextArea txtDescricao;
 
-    private JButton btnAdicionar, btnAtualizar, btnRemover, btnMarcarLidoLivro;
+    private JButton btnNovo, btnAtualizar, btnRemover, btnCancelar, btnMarcarLidoLivro;
 
     public PainelLivro(Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoLivro) {
         this.atualizarTabelaCallback = atualizarTabelaCallback;
@@ -92,20 +92,26 @@ public class PainelLivro {
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
         painelBotoes.setBackground(StyleConstants.SECONDARY_COLOR);
-        btnAdicionar = new JButton("Adicionar");
+        btnNovo = new JButton("Novo");
         btnAtualizar = new JButton("Salvar");
         btnRemover = new JButton("Remover");
-        ButtonStyles.applyDefaultStyle(btnAdicionar);
-        btnAdicionar.setToolTipText("Adicionar um novo livro");
+        btnCancelar = new JButton("Cancelar");
+
+        ButtonStyles.applyDefaultStyle(btnNovo);
+        btnNovo.setToolTipText("Limpar o formulário para adicionar um novo livro");
         ButtonStyles.applyDefaultStyle(btnAtualizar);
-        btnAtualizar.setToolTipText("Salvar alterações");
+        btnAtualizar.setToolTipText("Salvar livro novo ou alterações");
         ButtonStyles.applyDangerStyle(btnRemover);
         btnRemover.setToolTipText("Remover o livro selecionado");
+        ButtonStyles.applyDefaultStyle(btnCancelar);
+        btnCancelar.setToolTipText("Limpar os campos do formulário");
         ButtonStyles.applyDefaultStyle(btnMarcarLidoLivro);
         btnMarcarLidoLivro.setToolTipText("Marcar o livro selecionado como lido");
-        painelBotoes.add(btnAdicionar);
+
+        painelBotoes.add(btnNovo);
         painelBotoes.add(btnAtualizar);
         painelBotoes.add(btnRemover);
+        painelBotoes.add(btnCancelar);
         painelBotoes.add(btnMarcarLidoLivro);
         painel.add(painelBotoes, BorderLayout.SOUTH);
 
@@ -141,7 +147,8 @@ public class PainelLivro {
     public JTextArea getTxtDescricao() { return txtDescricao; }
     public JTextField getTxtPaginas() { return txtPaginas; }
     public JTextField getTxtIsbn() { return txtIsbn; }
-    public JButton getBtnAdicionar() { return btnAdicionar; }
+    public JButton getBtnNovo() { return btnNovo; }
     public JButton getBtnAtualizar() { return btnAtualizar; }
     public JButton getBtnRemover() { return btnRemover; }
+    public JButton getBtnCancelar() { return btnCancelar; }
 }

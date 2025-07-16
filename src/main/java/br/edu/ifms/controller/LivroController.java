@@ -17,7 +17,8 @@ public class LivroController {
     }
 
     public void initController() {
-        view.getBtnAdicionar().addActionListener(e -> adicionarLivro());
+        view.getBtnNovo().addActionListener(e -> view.limparCampos());
+        view.getBtnCancelar().addActionListener(e -> view.limparCampos());
         view.getBtnRemover().addActionListener(e -> removerLivro());
         view.getBtnAtualizar().addActionListener(e -> salvarLivro());
         view.getTabelaLivros().getSelectionModel().addListSelectionListener(e -> {
@@ -25,34 +26,6 @@ public class LivroController {
                 preencherFormularioComLivroSelecionado();
             }
         });
-    }
-
-    private void adicionarLivro() {
-        try {
-            String titulo = view.getTxtTitulo().getText();
-            String autor = view.getTxtAutor().getText();
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
-            int paginas = Integer.parseInt(view.getTxtPaginas().getText());
-            String isbn = view.getTxtIsbn().getText();
-
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-
-            Livro novo = new Livro(titulo, autor, ano, genero, descricao, paginas, isbn);
-            livros.add(novo);
-
-            view.getAtualizarTabelaCallback().accept("livro");
-            view.limparCampos();
-
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique Ano e Páginas.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao adicionar livro: " + ex.getMessage());
-        }
     }
 
     private void removerLivro() {
@@ -69,29 +42,47 @@ public class LivroController {
 
     private void salvarLivro() {
         int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
-        if (linhaSelecionada >= 0) {
-            try {
+        try {
+            String titulo = view.getTxtTitulo().getText();
+            String autor = view.getTxtAutor().getText();
+            
+            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
+                view.displayWarning("Título e Autor são obrigatórios.");
+                return;
+            }
+            
+            int ano = Integer.parseInt(view.getTxtAno().getText());
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            int paginas = Integer.parseInt(view.getTxtPaginas().getText());
+            String isbn = view.getTxtIsbn().getText();
+
+            if (linhaSelecionada >= 0) {
+                // Atualiza livro existente
                 int id = (Integer) view.getModeloLivros().getValueAt(linhaSelecionada, 0);
                 for (Livro livro : livros) {
                     if (livro.getId() == id) {
-                        livro.setTitulo(view.getTxtTitulo().getText());
-                        livro.setAutor(view.getTxtAutor().getText());
-                        livro.setAnoPublicacao(Integer.parseInt(view.getTxtAno().getText()));
-                        livro.setGenero((Genero) view.getComboGenero().getSelectedItem());
-                        livro.setDescricao(view.getTxtDescricao().getText());
-                        livro.setNumPaginas(Integer.parseInt(view.getTxtPaginas().getText()));
-                        livro.setIsbn(view.getTxtIsbn().getText());
+                        livro.setTitulo(titulo);
+                        livro.setAutor(autor);
+                        livro.setAnoPublicacao(ano);
+                        livro.setGenero(genero);
+                        livro.setDescricao(descricao);
+                        livro.setNumPaginas(paginas);
+                        livro.setIsbn(isbn);
                         break;
                     }
                 }
-                view.getAtualizarTabelaCallback().accept("livro");
-            } catch (NumberFormatException ex) {
-                view.displayError("Erro de formato numérico. Verifique Ano e Páginas.");
-            } catch (Exception ex) {
-                view.displayError("Erro ao atualizar livro: " + ex.getMessage());
+            } else {
+                // Adiciona novo livro
+                Livro novo = new Livro(titulo, autor, ano, genero, descricao, paginas, isbn);
+                livros.add(novo);
             }
-        } else {
-            view.displayWarning("Selecione um livro para atualizar.");
+            view.getAtualizarTabelaCallback().accept("livro");
+            view.limparCampos();
+        } catch (NumberFormatException ex) {
+            view.displayError("Erro de formato numérico. Verifique Ano e Páginas.");
+        } catch (Exception ex) {
+            view.displayError("Erro ao salvar livro: " + ex.getMessage());
         }
     }
 

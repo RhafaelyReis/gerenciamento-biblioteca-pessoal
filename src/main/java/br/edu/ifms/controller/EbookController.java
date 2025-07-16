@@ -17,7 +17,8 @@ public class EbookController {
     }
 
     public void initController() {
-        view.getBtnAdicionar().addActionListener(e -> adicionarEbook());
+        view.getBtnNovo().addActionListener(e -> view.limparCampos());
+        view.getBtnCancelar().addActionListener(e -> view.limparCampos());
         view.getBtnRemover().addActionListener(e -> removerEbook());
         view.getBtnAtualizar().addActionListener(e -> salvarEbook());
         view.getTabelaEbooks().getSelectionModel().addListSelectionListener(e -> {
@@ -25,33 +26,6 @@ public class EbookController {
                 preencherFormularioComEbookSelecionado();
             }
         });
-    }
-
-    private void adicionarEbook() {
-        try {
-            String titulo = view.getTxtTitulo().getText();
-            String autor = view.getTxtAutor().getText();
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
-            String dispositivo = view.getTxtDispositivo().getText();
-
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-
-            Ebook novo = new Ebook(titulo, autor, ano, genero, descricao, dispositivo);
-            ebooks.add(novo);
-
-            view.getAtualizarTabelaCallback().accept("ebook");
-            view.limparCampos();
-
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique o Ano.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao adicionar ebook: " + ex.getMessage());
-        }
     }
 
     private void removerEbook() {
@@ -68,28 +42,45 @@ public class EbookController {
 
     private void salvarEbook() {
         int linhaSelecionada = view.getTabelaEbooks().getSelectedRow();
-        if (linhaSelecionada >= 0) {
-            try {
+        try {
+            String titulo = view.getTxtTitulo().getText();
+            String autor = view.getTxtAutor().getText();
+
+            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
+                view.displayWarning("Título e Autor são obrigatórios.");
+                return;
+            }
+
+            int ano = Integer.parseInt(view.getTxtAno().getText());
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            String dispositivo = view.getTxtDispositivo().getText();
+
+            if (linhaSelecionada >= 0) {
+                // Atualiza ebook existente
                 int id = (Integer) view.getModeloEbooks().getValueAt(linhaSelecionada, 0);
                 for (Ebook ebook : ebooks) {
                     if (ebook.getId() == id) {
-                        ebook.setTitulo(view.getTxtTitulo().getText());
-                        ebook.setAutor(view.getTxtAutor().getText());
-                        ebook.setAnoPublicacao(Integer.parseInt(view.getTxtAno().getText()));
-                        ebook.setGenero((Genero) view.getComboGenero().getSelectedItem());
-                        ebook.setDescricao(view.getTxtDescricao().getText());
-                        ebook.setDispositivo(view.getTxtDispositivo().getText());
+                        ebook.setTitulo(titulo);
+                        ebook.setAutor(autor);
+                        ebook.setAnoPublicacao(ano);
+                        ebook.setGenero(genero);
+                        ebook.setDescricao(descricao);
+                        ebook.setDispositivo(dispositivo);
                         break;
                     }
                 }
-                view.getAtualizarTabelaCallback().accept("ebook");
-            } catch (NumberFormatException ex) {
-                view.displayError("Erro de formato numérico. Verifique o Ano.");
-            } catch (Exception ex) {
-                view.displayError("Erro ao atualizar ebook: " + ex.getMessage());
+            } else {
+                // Adiciona novo ebook
+                Ebook novo = new Ebook(titulo, autor, ano, genero, descricao, dispositivo);
+                ebooks.add(novo);
             }
-        } else {
-            view.displayWarning("Selecione um ebook para atualizar.");
+            view.getAtualizarTabelaCallback().accept("ebook");
+            view.limparCampos();
+        } catch (NumberFormatException ex) {
+            view.displayError("Erro de formato numérico. Verifique o Ano.");
+        } catch (Exception ex) {
+            view.displayError("Erro ao salvar ebook: " + ex.getMessage());
         }
     }
 
