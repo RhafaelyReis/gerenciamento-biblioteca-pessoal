@@ -74,7 +74,7 @@ public class TelaGerenciarItens extends JPanel {
 
         // Título
         JLabel titulo = new JLabel("Gerenciar Itens da Biblioteca");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));

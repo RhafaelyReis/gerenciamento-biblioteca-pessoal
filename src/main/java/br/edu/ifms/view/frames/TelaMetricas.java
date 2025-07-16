@@ -41,7 +41,7 @@ public class TelaMetricas extends JPanel {
         
         // Título
         JLabel titulo = new JLabel("Métricas da Biblioteca");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
@@ -83,7 +83,7 @@ public class TelaMetricas extends JPanel {
         ));
         
         JLabel tituloDistribuicao = new JLabel("Quantidade por tipo");
-        tituloDistribuicao.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        tituloDistribuicao.setFont(StyleConstants.FONT_BOLD);
         tituloDistribuicao.setForeground(StyleConstants.PRIMARY_COLOR);
         tituloDistribuicao.setHorizontalAlignment(SwingConstants.CENTER);
         painelDistribuicao.add(tituloDistribuicao, BorderLayout.NORTH);
@@ -139,7 +139,7 @@ public class TelaMetricas extends JPanel {
         card.setPreferredSize(new Dimension(300, 100));
         
         JLabel lblTitulo = new JLabel(titulo);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTitulo.setFont(StyleConstants.FONT_BOLD);
         lblTitulo.setForeground(StyleConstants.PRIMARY_COLOR);
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         card.add(lblTitulo, BorderLayout.NORTH);
@@ -166,7 +166,7 @@ public class TelaMetricas extends JPanel {
         ));
         
         JLabel lblTipo = new JLabel(tipo);
-        lblTipo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTipo.setFont(StyleConstants.FONT_BOLD);
         lblTipo.setForeground(StyleConstants.PRIMARY_COLOR);
         lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
         card.add(lblTipo, BorderLayout.NORTH);

@@ -54,7 +54,7 @@ public class TelaMeusItens extends JPanel {
         
         // Título
         JLabel titulo = new JLabel("Meus Itens");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
@@ -138,7 +138,7 @@ public class TelaMeusItens extends JPanel {
         
         // Título dos filtros
         JLabel tituloFiltros = new JLabel("Filtros e Busca");
-        tituloFiltros.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        tituloFiltros.setFont(StyleConstants.LARGE_FONT);
         tituloFiltros.setForeground(StyleConstants.PRIMARY_COLOR);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 4;
         painelFiltros.add(tituloFiltros, gbc);

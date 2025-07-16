@@ -56,7 +56,7 @@ public class TelaInicial extends JFrame {
         
         // Título
         JLabel titulo = new JLabel("Sistema de Biblioteca Pessoal");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
