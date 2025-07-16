@@ -22,7 +22,6 @@ public class TelaMetricas extends JPanel {
     private JLabel lblTotalAudiobooks;
     private JLabel lblMediaAvaliacoes;
     private JButton btnVoltar;
-    private JButton btnAtualizar;
     
     public TelaMetricas(TelaInicial telaPrincipal, List<Livro> livros, 
                         List<Ebook> ebooks, List<Audiobook> audiobooks) {
@@ -118,10 +117,6 @@ public class TelaMetricas extends JPanel {
         painelInferior.setBackground(StyleConstants.SECONDARY_COLOR);
         painelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
-        btnAtualizar = new JButton("Atualizar Métricas");
-        ButtonStyles.applyDefaultStyle(btnAtualizar);
-        painelInferior.add(btnAtualizar);
-        
         btnVoltar = new JButton("Voltar ao Menu");
         ButtonStyles.applyDangerStyle(btnVoltar);
         painelInferior.add(btnVoltar);
@@ -188,7 +183,6 @@ public class TelaMetricas extends JPanel {
     
     private void configurarEventos() {
         btnVoltar.addActionListener(e -> telaPrincipal.voltarParaMenu());
-        btnAtualizar.addActionListener(e -> atualizarMetricas());
     }
     
     private void atualizarMetricas() {
