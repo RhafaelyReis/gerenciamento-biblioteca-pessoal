@@ -21,6 +21,7 @@ public class StyleConstants {
     public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
     public static final Font SMALL_FONT = new Font("Segoe UI", Font.PLAIN, 12);
     public static final Font LARGE_FONT = new Font("Segoe UI", Font.BOLD, 16);
+    public static final Font TITLE = new Font("Segoe UI", Font.BOLD, 24);
     
     // === DIMENSÕES ===
     public static final Dimension BUTTON_SIZE = new Dimension(120, 35);
