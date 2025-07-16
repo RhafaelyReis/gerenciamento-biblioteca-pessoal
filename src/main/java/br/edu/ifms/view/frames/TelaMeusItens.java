@@ -195,7 +195,7 @@ public class TelaMeusItens extends JPanel {
         gbc.gridx = 2;
         painelFiltros.add(lblAvaliacao, gbc);
         
-        comboAvaliacao = new JComboBox<>(new String[]{"Todas", "1 estrela", "2 estrelas", "3 estrelas", "4 estrelas", "5 estrelas", "Não avaliado"});
+        comboAvaliacao = new JComboBox<>(new String[]{"Todas", "Muito Ruim", "Ruim", "Regular", "Bom", "Excelente", "Não avaliado"});
         comboAvaliacao.setFont(StyleConstants.FONT);
         gbc.gridx = 3;
         painelFiltros.add(comboAvaliacao, gbc);
