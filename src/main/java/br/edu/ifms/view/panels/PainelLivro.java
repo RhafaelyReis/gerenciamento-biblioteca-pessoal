@@ -185,9 +185,13 @@ public class PainelLivro {
         JButton btnRemover = new JButton("Remover");
 
         ButtonStyles.applyDefaultStyle(btnAdicionar);
+        btnAdicionar.setToolTipText("Adicionar um novo livro");
         ButtonStyles.applyDefaultStyle(btnAtualizar);
+        btnAtualizar.setToolTipText("Salvar alterações");
         ButtonStyles.applyDangerStyle(btnRemover);
+        btnRemover.setToolTipText("Remover o livro selecionado");
         ButtonStyles.applyDefaultStyle(btnMarcarLidoLivro);
+        btnMarcarLidoLivro.setToolTipText("Marcar o livro selecionado como lido");
 
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnAtualizar);

@@ -172,9 +172,13 @@ public class PainelEbook {
         JButton btnRemover = new JButton("Remover");
 
         ButtonStyles.applyDefaultStyle(btnAdicionar);
+        btnAdicionar.setToolTipText("Adicionar um novo ebook");
         ButtonStyles.applyDefaultStyle(btnAtualizar);
+        btnAtualizar.setToolTipText("Salvar alterações");
         ButtonStyles.applyDangerStyle(btnRemover);
+        btnRemover.setToolTipText("Remover o ebook selecionado");
         ButtonStyles.applyDefaultStyle(btnMarcarLidoEbook);
+        btnMarcarLidoEbook.setToolTipText("Marcar o ebook selecionado como lido");
 
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnAtualizar);

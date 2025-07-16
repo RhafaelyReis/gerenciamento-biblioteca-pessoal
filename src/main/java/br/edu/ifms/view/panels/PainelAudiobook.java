@@ -184,9 +184,13 @@ public class PainelAudiobook {
         JButton btnRemover = new JButton("Remover");
 
         ButtonStyles.applyDefaultStyle(btnAdicionar);
+        btnAdicionar.setToolTipText("Adicionar novo audiobook");
         ButtonStyles.applyDefaultStyle(btnAtualizar);
+        btnAtualizar.setToolTipText("Salvar alterações");
         ButtonStyles.applyDangerStyle(btnRemover);
+        btnRemover.setToolTipText("Remover audiobook selecionado");
         ButtonStyles.applyDefaultStyle(btnMarcarLidoAudiobook);
+        btnMarcarLidoAudiobook.setToolTipText("Marcar audiobook selecionado como lido");
 
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnAtualizar);
