@@ -3,11 +3,11 @@ package br.edu.ifms.model;
 
 public enum Nota {
     NAO_AVALIADO("Não avaliado", ""),
-    UMA_ESTRELA("1 estrela", "★"),
-    DUAS_ESTRELAS("2 estrelas", "★★"),
-    TRES_ESTRELAS("3 estrelas", "★★★"),
-    QUATRO_ESTRELAS("4 estrelas", "★★★★"),
-    CINCO_ESTRELAS("5 estrelas", "★★★★★");
+    UMA_ESTRELA("Muito Ruim", "★"),
+    DUAS_ESTRELAS("Ruim", "★★"),
+    TRES_ESTRELAS("Regular", "★★★"),
+    QUATRO_ESTRELAS("Bom", "★★★★"),
+    CINCO_ESTRELAS("Excelente", "★★★★★");
 
     private final String descricao;
     private final String simbolo;
