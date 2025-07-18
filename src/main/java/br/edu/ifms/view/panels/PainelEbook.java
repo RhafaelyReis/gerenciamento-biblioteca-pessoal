@@ -9,28 +9,44 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.function.Consumer;
 
+/**
+ * Classe auxiliar que cria e gerencia o painel de formulário e tabela para Ebooks.
+ */
 public class PainelEbook {
 
-    private DefaultTableModel modeloEbooks;
-    private JTable tabelaEbooks;
-    private Consumer<String> atualizarTabelaCallback;
+    // --- Modelos e Controles ---
+    private DefaultTableModel modeloEbooks; // Modelo de dados para a tabela de ebooks.
+    private JTable tabelaEbooks; // Tabela para exibir os ebooks.
+    private Consumer<String> atualizarTabelaCallback; // Callback para atualizar a tabela na tela principal.
 
+    // --- Componentes do Formulário ---
     private JTextField txtTitulo, txtAutor, txtAno, txtDispositivo;
     private JComboBox<Genero> comboGenero;
     private JTextArea txtDescricao;
-
+    
+    // --- Botões de Ação ---
     private JButton btnNovo, btnAtualizar, btnRemover, btnCancelar, btnMarcarLidoEbook;
 
+    /**
+     * Construtor do painel de ebooks.
+     * @param atualizarTabelaCallback Função para notificar a tela principal que a tabela precisa ser atualizada.
+     * @param btnMarcarLidoEbook Botão da tela principal para a ação de marcar como lido.
+     */
     public PainelEbook(Consumer<String> atualizarTabelaCallback, JButton btnMarcarLidoEbook) {
         this.atualizarTabelaCallback = atualizarTabelaCallback;
         this.btnMarcarLidoEbook = btnMarcarLidoEbook;
     }
 
+    /**
+     * Cria e retorna o painel completo com formulário, tabela e botões para Ebooks.
+     * @return O JPanel configurado.
+     */
     public JPanel criarPainelEbooks() {
         JPanel painel = new JPanel(new BorderLayout());
         painel.setBackground(StyleConstants.SECONDARY_COLOR);
         painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // --- Painel do Formulário ---
         JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBackground(StyleConstants.SECONDARY_COLOR);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -59,10 +75,9 @@ public class PainelEbook {
         gbc.gridx = 1; gbc.weightx = 1.0; gbc.weighty = 1.0; gbc.fill = GridBagConstraints.BOTH; painelFormulario.add(scrollDescricao, gbc);
         gbc.gridx = 0; gbc.gridy = 5; gbc.weightx = 0; gbc.weighty = 0; gbc.fill = GridBagConstraints.NONE; painelFormulario.add(new JLabel("Dispositivo:"), gbc);
         gbc.gridx = 1; gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL; painelFormulario.add(txtDispositivo, gbc);
-
         painel.add(painelFormulario, BorderLayout.NORTH);
-        painel.add(Box.createVerticalStrut(20), BorderLayout.CENTER);
 
+        // --- Painel da Tabela ---
         JPanel painelTabelaContainer = new JPanel(new BorderLayout());
         painelTabelaContainer.setBackground(StyleConstants.SECONDARY_COLOR);
         painelTabelaContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
@@ -77,16 +92,12 @@ public class PainelEbook {
         };
         tabelaEbooks = new JTable(modeloEbooks);
         tabelaEbooks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabelaEbooks.setFont(StyleConstants.FONT);
-        tabelaEbooks.setRowHeight(25);
-        tabelaEbooks.getTableHeader().setFont(StyleConstants.FONT_BOLD);
-        tabelaEbooks.getTableHeader().setBackground(StyleConstants.PRIMARY_COLOR);
-        tabelaEbooks.getTableHeader().setForeground(StyleConstants.SECONDARY_COLOR);
         JScrollPane scrollPane = new JScrollPane(tabelaEbooks);
         scrollPane.setPreferredSize(new Dimension(750, 200));
         painelTabelaContainer.add(scrollPane, BorderLayout.CENTER);
         painel.add(painelTabelaContainer, BorderLayout.CENTER);
-
+        
+        // --- Painel de Botões ---
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
         painelBotoes.setBackground(StyleConstants.SECONDARY_COLOR);
         btnNovo = new JButton("Novo");
@@ -95,15 +106,10 @@ public class PainelEbook {
         btnCancelar = new JButton("Cancelar");
 
         ButtonStyles.applyDefaultStyle(btnNovo);
-        btnNovo.setToolTipText("Limpar o formulário para adicionar um novo ebook");
         ButtonStyles.applyDefaultStyle(btnAtualizar);
-        btnAtualizar.setToolTipText("Salvar ebook novo ou alterações");
         ButtonStyles.applyDangerStyle(btnRemover);
-        btnRemover.setToolTipText("Remover o ebook selecionado");
         ButtonStyles.applyDefaultStyle(btnCancelar);
-        btnCancelar.setToolTipText("Limpar os campos do formulário");
         ButtonStyles.applyDefaultStyle(btnMarcarLidoEbook);
-        btnMarcarLidoEbook.setToolTipText("Marcar o ebook selecionado como lido");
 
         painelBotoes.add(btnNovo);
         painelBotoes.add(btnAtualizar);
@@ -115,6 +121,7 @@ public class PainelEbook {
         return painel;
     }
 
+    /** Limpa todos os campos do formulário e a seleção da tabela. */
     public void limparCampos() {
         txtTitulo.setText("");
         txtAutor.setText("");
@@ -125,25 +132,47 @@ public class PainelEbook {
         tabelaEbooks.clearSelection();
     }
 
+    /**
+     * Exibe uma caixa de diálogo de erro.
+     * @param message A mensagem a ser exibida.
+     */
     public void displayError(String message) {
         JOptionPane.showMessageDialog(tabelaEbooks.getParent(), message, "Erro", JOptionPane.ERROR_MESSAGE);
     }
-
+    
+    /**
+     * Exibe uma caixa de diálogo de aviso.
+     * @param message A mensagem a ser exibida.
+     */
     public void displayWarning(String message) {
         JOptionPane.showMessageDialog(tabelaEbooks.getParent(), message, "Aviso", JOptionPane.WARNING_MESSAGE);
     }
 
+    // --- Getters ---
+    /** @return O modelo de dados da tabela de ebooks. */
     public DefaultTableModel getModeloEbooks() { return modeloEbooks; }
+    /** @return A tabela de ebooks. */
     public JTable getTabelaEbooks() { return tabelaEbooks; }
+    /** @return O callback de atualização da tabela. */
     public Consumer<String> getAtualizarTabelaCallback() { return atualizarTabelaCallback; }
+    /** @return O campo de texto do título. */
     public JTextField getTxtTitulo() { return txtTitulo; }
+    /** @return O campo de texto do autor. */
     public JTextField getTxtAutor() { return txtAutor; }
+    /** @return O campo de texto do ano. */
     public JTextField getTxtAno() { return txtAno; }
+    /** @return O seletor de gênero. */
     public JComboBox<Genero> getComboGenero() { return comboGenero; }
+    /** @return A área de texto da descrição. */
     public JTextArea getTxtDescricao() { return txtDescricao; }
+    /** @return O campo de texto do dispositivo. */
     public JTextField getTxtDispositivo() { return txtDispositivo; }
+    /** @return O botão "Novo". */
     public JButton getBtnNovo() { return btnNovo; }
+    /** @return O botão "Salvar". */
     public JButton getBtnAtualizar() { return btnAtualizar; }
+    /** @return O botão "Remover". */
     public JButton getBtnRemover() { return btnRemover; }
+    /** @return O botão "Cancelar". */
     public JButton getBtnCancelar() { return btnCancelar; }
 }

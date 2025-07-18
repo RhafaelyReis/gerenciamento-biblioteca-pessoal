@@ -5,8 +5,12 @@ import br.edu.ifms.view.styles.ButtonStyles;
 import br.edu.ifms.view.styles.StyleConstants;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Painel que exibe métricas e estatísticas da biblioteca.
+ */
 public class TelaMetricas extends JPanel {
     
     private TelaInicial telaPrincipal;
@@ -14,15 +18,17 @@ public class TelaMetricas extends JPanel {
     private List<Ebook> ebooks;
     private List<Audiobook> audiobooks;
     
-    // Componentes da interface
-    private JLabel lblTotalItens;
-    private JLabel lblTotalLidos;
-    private JLabel lblTotalLivros;
-    private JLabel lblTotalEbooks;
-    private JLabel lblTotalAudiobooks;
-    private JLabel lblMediaAvaliacoes;
+    // --- Componentes UI ---
+    private JLabel lblTotalItens, lblTotalLidos, lblTotalLivros, lblTotalEbooks, lblTotalAudiobooks, lblMediaAvaliacoes;
     private JButton btnVoltar;
     
+    /**
+     * Construtor da tela de métricas.
+     * @param telaPrincipal Referência à tela principal.
+     * @param livros Lista de livros.
+     * @param ebooks Lista de ebooks.
+     * @param audiobooks Lista de audiobooks.
+     */
     public TelaMetricas(TelaInicial telaPrincipal, List<Livro> livros, 
                         List<Ebook> ebooks, List<Audiobook> audiobooks) {
         this.telaPrincipal = telaPrincipal;
@@ -34,11 +40,11 @@ public class TelaMetricas extends JPanel {
         atualizarMetricas();
     }
     
+    /** Cria e configura os componentes da interface. */
     private void initComponents() {
         setBackground(StyleConstants.SECONDARY_COLOR);
         setLayout(new BorderLayout());
         
-        // Título
         JLabel titulo = new JLabel("Métricas da Biblioteca");
         titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -46,7 +52,6 @@ public class TelaMetricas extends JPanel {
         titulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
         add(titulo, BorderLayout.NORTH);
         
-        // Painel central com métricas
         JPanel painelCentral = new JPanel(new GridBagLayout());
         painelCentral.setBackground(StyleConstants.SECONDARY_COLOR);
         painelCentral.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
@@ -55,25 +60,21 @@ public class TelaMetricas extends JPanel {
         gbc.insets = new Insets(15, 20, 15, 20);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Card para Total de Itens
         JPanel cardTotalItens = criarCardMetrica("Total de livros na sua biblioteca", "0");
         lblTotalItens = (JLabel) ((JPanel) cardTotalItens.getComponent(1)).getComponent(0);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         painelCentral.add(cardTotalItens, gbc);
         
-        // Card para Itens Lidos
         JPanel cardTotalLidos = criarCardMetrica("Livros lidos", "0");
         lblTotalLidos = (JLabel) ((JPanel) cardTotalLidos.getComponent(1)).getComponent(0);
         gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
         painelCentral.add(cardTotalLidos, gbc);
         
-        // Card para Média de Avaliações
         JPanel cardMediaAvaliacoes = criarCardMetrica("Média de Avaliações", "0.0");
         lblMediaAvaliacoes = (JLabel) ((JPanel) cardMediaAvaliacoes.getComponent(1)).getComponent(0);
         gbc.gridx = 1; gbc.gridy = 1;
         painelCentral.add(cardMediaAvaliacoes, gbc);
         
-        // Seção de Distribuição por Tipo
         JPanel painelDistribuicao = new JPanel(new BorderLayout());
         painelDistribuicao.setBackground(StyleConstants.SECONDARY_HOVER);
         painelDistribuicao.setBorder(BorderFactory.createCompoundBorder(
@@ -91,7 +92,6 @@ public class TelaMetricas extends JPanel {
         painelTipos.setBackground(StyleConstants.SECONDARY_HOVER);
         painelTipos.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         
-        // Cards para cada tipo
         JPanel cardLivros = criarCardTipo("Livros", "0", "LIVRO FÍSICO");
         lblTotalLivros = (JLabel) ((JPanel) cardLivros.getComponent(1)).getComponent(0);
         painelTipos.add(cardLivros);
@@ -112,7 +112,6 @@ public class TelaMetricas extends JPanel {
         
         add(painelCentral, BorderLayout.CENTER);
         
-        // Painel inferior com botões
         JPanel painelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelInferior.setBackground(StyleConstants.SECONDARY_COLOR);
         painelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -124,7 +123,14 @@ public class TelaMetricas extends JPanel {
         add(painelInferior, BorderLayout.SOUTH);
     }
     
+    /**
+     * Cria um card estilizado para exibir uma métrica.
+     * @param titulo Título do card.
+     * @param valor Valor inicial.
+     * @return O painel do card.
+     */
     private JPanel criarCardMetrica(String titulo, String valor) {
+        //... Implementação do método (já concisa)
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(StyleConstants.SECONDARY_HOVER);
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -152,7 +158,15 @@ public class TelaMetricas extends JPanel {
         return card;
     }
     
+    /**
+     * Cria um card menor para a distribuição de itens por tipo.
+     * @param titulo Título do card.
+     * @param valor Valor inicial.
+     * @param tipo Descrição do tipo.
+     * @return O painel do card.
+     */
     private JPanel criarCardTipo(String titulo, String valor, String tipo) {
+        //... Implementação do método (já concisa)
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(StyleConstants.SECONDARY_COLOR);
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -181,52 +195,36 @@ public class TelaMetricas extends JPanel {
         return card;
     }
     
+    /** Configura a ação do botão de voltar. */
     private void configurarEventos() {
         btnVoltar.addActionListener(e -> telaPrincipal.voltarParaMenu());
     }
     
+    /** Calcula e exibe todas as métricas na tela. */
     private void atualizarMetricas() {
-        // Calcular total de itens
         int totalItens = livros.size() + ebooks.size() + audiobooks.size();
         lblTotalItens.setText(String.valueOf(totalItens));
         
-        // Calcular total de itens lidos
-        int totalLidos = 0;
-        for (Livro livro : livros) {
-            if (livro.isLido()) totalLidos++;
-        }
-        for (Ebook ebook : ebooks) {
-            if (ebook.isLido()) totalLidos++;
-        }
-        for (Audiobook audiobook : audiobooks) {
-            if (audiobook.isLido()) totalLidos++;
-        }
+        long totalLidos = livros.stream().filter(Item::isLido).count()
+                        + ebooks.stream().filter(Item::isLido).count()
+                        + audiobooks.stream().filter(Item::isLido).count();
         lblTotalLidos.setText(String.valueOf(totalLidos));
         
-        // Atualizar distribuição por tipo
         lblTotalLivros.setText(String.valueOf(livros.size()));
         lblTotalEbooks.setText(String.valueOf(ebooks.size()));
         lblTotalAudiobooks.setText(String.valueOf(audiobooks.size()));
         
-        // Calcular média de avaliações
         double somaNotas = 0;
         int itensAvaliados = 0;
         
-        for (Livro livro : livros) {
-            if (livro.isLido() && livro.getNota() != Nota.NAO_AVALIADO) {
-                somaNotas += obterValorNota(livro.getNota());
-                itensAvaliados++;
-            }
-        }
-        for (Ebook ebook : ebooks) {
-            if (ebook.isLido() && ebook.getNota() != Nota.NAO_AVALIADO) {
-                somaNotas += obterValorNota(ebook.getNota());
-                itensAvaliados++;
-            }
-        }
-        for (Audiobook audiobook : audiobooks) {
-            if (audiobook.isLido() && audiobook.getNota() != Nota.NAO_AVALIADO) {
-                somaNotas += obterValorNota(audiobook.getNota());
+        List<Item> todosItens = new ArrayList<>();
+        todosItens.addAll(livros);
+        todosItens.addAll(ebooks);
+        todosItens.addAll(audiobooks);
+        
+        for (Item item : todosItens) {
+            if (item.isLido() && item.getNota() != Nota.NAO_AVALIADO) {
+                somaNotas += obterValorNota(item.getNota());
                 itensAvaliados++;
             }
         }
@@ -235,10 +233,15 @@ public class TelaMetricas extends JPanel {
             double media = somaNotas / itensAvaliados;
             lblMediaAvaliacoes.setText(String.format("%.1f", media));
         } else {
-            lblMediaAvaliacoes.setText("0.0");
+            lblMediaAvaliacoes.setText("N/A");
         }
     }
     
+    /**
+     * Converte um enum Nota para seu valor numérico.
+     * @param nota O enum Nota.
+     * @return O valor inteiro da nota.
+     */
     private int obterValorNota(Nota nota) {
         switch (nota) {
             case UMA_ESTRELA: return 1;
@@ -250,6 +253,7 @@ public class TelaMetricas extends JPanel {
         }
     }
     
+    /** @return O container principal deste painel. */
     public Container getContentPane() {
         return this;
     }

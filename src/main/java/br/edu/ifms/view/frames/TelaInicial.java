@@ -6,25 +6,32 @@ import br.edu.ifms.view.styles.StyleConstants;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Janela principal da aplicação que gerencia a navegação entre as telas.
+ */
 public class TelaInicial extends JFrame {
     
-    private CardLayout cardLayout;
-    private JPanel painelPrincipal;
+    // --- Gerenciamento de Layout e Telas ---
+    private CardLayout cardLayout; // Gerenciador de layout para alternar entre as telas.
+    private JPanel painelPrincipal; // Painel que contém todas as outras telas.
     private static final String TELA_MENU = "MENU";
     private static final String TELA_GERENCIAR = "GERENCIAR";
     private static final String TELA_METRICAS = "METRICAS";
     private static final String TELA_MEUS_ITENS = "MEUS_ITENS";
     
+    // --- Instâncias das Telas ---
     private TelaGerenciarItens telaGerenciar;
     private TelaMetricas telaMetricas;
     private TelaMeusItens telaMeusItens;
     
-    private GerenciarItensController gerenciarItensController;
+    private GerenciarItensController gerenciarItensController; // Controller da lógica de negócio.
     
+    /** Construtor da tela inicial. */
     public TelaInicial() {
         initComponents();
     }
     
+    /** Inicializa a janela principal e os painéis. */
     private void initComponents() {
         setTitle("Biblioteca Pessoal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,6 +46,7 @@ public class TelaInicial extends JFrame {
 
         telaGerenciar = new TelaGerenciarItens(this);
         
+        // Inicializa o controller que gerencia as ações da tela de gerenciamento
         gerenciarItensController = new GerenciarItensController(
             telaGerenciar,
             telaGerenciar.getLivros(),
@@ -55,6 +63,10 @@ public class TelaInicial extends JFrame {
         cardLayout.show(painelPrincipal, TELA_MENU);
     }
     
+    /**
+     * Cria o painel do menu principal com os botões de navegação.
+     * @return O painel do menu.
+     */
     private JPanel criarPainelMenu() {
         JPanel painel = new JPanel(new BorderLayout());
         painel.setBackground(StyleConstants.SECONDARY_COLOR);
@@ -102,6 +114,12 @@ public class TelaInicial extends JFrame {
         return painel;
     }
     
+    /**
+     * Cria e estiliza um botão padrão.
+     * @param texto Texto do botão.
+     * @param isDanger true para estilo de perigo, false para padrão.
+     * @return O botão criado.
+     */
     private JButton criarBotao(String texto, boolean isDanger) {
         JButton botao = new JButton(texto);
         botao.setPreferredSize(new Dimension(200, 40));
@@ -109,6 +127,7 @@ public class TelaInicial extends JFrame {
         return botao;
     }
     
+    /** Associa os eventos de clique aos botões do menu. */
     private void configurarEventos(JButton btnGerenciarItens, JButton btnMetricas, JButton btnMeusItens, JButton btnSair) {
         btnGerenciarItens.addActionListener(e -> abrirGerenciarItens());
         btnMetricas.addActionListener(e -> abrirMetricas());
@@ -116,10 +135,12 @@ public class TelaInicial extends JFrame {
         btnSair.addActionListener(e -> sairAplicacao());
     }
     
+    /** Navega para a tela de gerenciamento de itens. */
     private void abrirGerenciarItens() {
         cardLayout.show(painelPrincipal, TELA_GERENCIAR);
     }
     
+    /** Navega para a tela de métricas, recriando-a para garantir dados atualizados. */
     private void abrirMetricas() {
         if (telaMetricas != null) {
             painelPrincipal.remove(telaMetricas.getContentPane());
@@ -129,6 +150,7 @@ public class TelaInicial extends JFrame {
         cardLayout.show(painelPrincipal, TELA_METRICAS);
     }
     
+    /** Navega para a tela 'Meus Itens', recriando-a para garantir dados atualizados. */
     private void abrirMeusItens() {
         if (telaMeusItens != null) {
             painelPrincipal.remove(telaMeusItens);
@@ -138,15 +160,18 @@ public class TelaInicial extends JFrame {
         cardLayout.show(painelPrincipal, TELA_MEUS_ITENS);
     }
     
+    /** Exibe confirmação e encerra a aplicação. */
     private void sairAplicacao() {
         int resposta = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja sair?", "Confirmar Saída", JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) System.exit(0);
     }
     
+    /** Retorna para a tela do menu principal. */
     public void voltarParaMenu() {
         cardLayout.show(painelPrincipal, TELA_MENU);
     }
     
+    /** Ponto de entrada da aplicação. */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TelaInicial().setVisible(true));
     }

@@ -10,26 +10,34 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Painel para visualizar e filtrar todos os itens da biblioteca em uma única tabela.
+ */
 public class TelaMeusItens extends JPanel {
     
+    // --- Dados ---
     private TelaInicial telaPrincipal;
     private List<Livro> livros;
     private List<Ebook> ebooks;
     private List<Audiobook> audiobooks;
     private List<Item> todosItens;
     
+    // --- Componentes UI ---
     private JTextField campoBusca;
-    private JComboBox<String> comboTipo;
-    private JComboBox<String> comboGenero;
-    private JComboBox<String> comboAvaliacao;
-    private JComboBox<String> comboStatus;
+    private JComboBox<String> comboTipo, comboGenero, comboAvaliacao, comboStatus;
     private JTable tabelaItens;
     private DefaultTableModel modeloTabela;
     private TableRowSorter<DefaultTableModel> sorter;
-    private JButton btnLimparFiltros;
-    private JButton btnVoltar;
+    private JButton btnLimparFiltros, btnVoltar;
     private JLabel lblTotalItens;
     
+    /**
+     * Construtor da tela Meus Itens.
+     * @param telaPrincipal Referência à tela principal.
+     * @param livros Lista de livros.
+     * @param ebooks Lista de ebooks.
+     * @param audiobooks Lista de audiobooks.
+     */
     public TelaMeusItens(TelaInicial telaPrincipal, List<Livro> livros, 
                          List<Ebook> ebooks, List<Audiobook> audiobooks) {
         this.telaPrincipal = telaPrincipal;
@@ -44,15 +52,14 @@ public class TelaMeusItens extends JPanel {
         carregarDadosTabela();
     }
     
+    /** Cria e configura os componentes da interface. */
     private void initComponents() {
         setBackground(StyleConstants.SECONDARY_COLOR);
         setLayout(new BorderLayout());
         
-        // Criar painel superior que conterá tanto o título quanto os filtros
         JPanel painelSuperior = new JPanel(new BorderLayout());
         painelSuperior.setBackground(StyleConstants.SECONDARY_COLOR);
         
-        // Título
         JLabel titulo = new JLabel("Meus Itens");
         titulo.setFont(StyleConstants.TITLE);
         titulo.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -60,25 +67,16 @@ public class TelaMeusItens extends JPanel {
         titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         painelSuperior.add(titulo, BorderLayout.NORTH);
         
-        // Painel de filtros
-        JPanel painelFiltros = criarPainelFiltros();
-        painelSuperior.add(painelFiltros, BorderLayout.CENTER);
-        
-        // Adicionar o painel superior completo
+        painelSuperior.add(criarPainelFiltros(), BorderLayout.CENTER);
         add(painelSuperior, BorderLayout.NORTH);
         
-        // Painel central com tabela
         JPanel painelCentral = new JPanel(new BorderLayout());
         painelCentral.setBackground(StyleConstants.SECONDARY_COLOR);
         painelCentral.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         
-        // Criar tabela
         String[] colunas = {"Tipo", "Título", "Autor", "Gênero", "Ano", "Status", "Avaliação"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         
         tabelaItens = new JTable(modeloTabela);
@@ -90,7 +88,6 @@ public class TelaMeusItens extends JPanel {
         tabelaItens.getTableHeader().setForeground(Color.WHITE);
         tabelaItens.getTableHeader().setFont(StyleConstants.FONT_BOLD);
         
-        // Configurar sorter para filtragem
         sorter = new TableRowSorter<>(modeloTabela);
         tabelaItens.setRowSorter(sorter);
         
@@ -98,7 +95,6 @@ public class TelaMeusItens extends JPanel {
         scrollPane.setBorder(BorderFactory.createLineBorder(StyleConstants.PRIMARY_COLOR));
         painelCentral.add(scrollPane, BorderLayout.CENTER);
         
-        // Painel com informações
         JPanel painelInfo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         painelInfo.setBackground(StyleConstants.SECONDARY_COLOR);
         painelInfo.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
@@ -109,10 +105,8 @@ public class TelaMeusItens extends JPanel {
         painelInfo.add(lblTotalItens);
         
         painelCentral.add(painelInfo, BorderLayout.SOUTH);
-        
         add(painelCentral, BorderLayout.CENTER);
         
-        // Painel inferior com botões
         JPanel painelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelInferior.setBackground(StyleConstants.SECONDARY_COLOR);
         painelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -120,11 +114,15 @@ public class TelaMeusItens extends JPanel {
         btnVoltar = new JButton("Voltar ao Menu");
         ButtonStyles.applyDangerStyle(btnVoltar);
         painelInferior.add(btnVoltar);
-        
         add(painelInferior, BorderLayout.SOUTH);
     }
     
+    /**
+     * Cria o painel com todos os campos de filtro e busca.
+     * @return O painel de filtros.
+     */
     private JPanel criarPainelFiltros() {
+        //... Implementação do método (já concisa)
         JPanel painelFiltros = new JPanel(new GridBagLayout());
         painelFiltros.setBackground(StyleConstants.SECONDARY_HOVER);
         painelFiltros.setBorder(BorderFactory.createCompoundBorder(
@@ -136,16 +134,13 @@ public class TelaMeusItens extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
         
-        // Título dos filtros
         JLabel tituloFiltros = new JLabel("Filtros e Busca");
         tituloFiltros.setFont(StyleConstants.LARGE_FONT);
         tituloFiltros.setForeground(StyleConstants.PRIMARY_COLOR);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 4;
         painelFiltros.add(tituloFiltros, gbc);
         
-        // Campo de busca
-        gbc.gridwidth = 1;
-        gbc.gridy = 1;
+        gbc.gridwidth = 1; gbc.gridy = 1;
         
         JLabel lblBusca = new JLabel("Buscar:");
         lblBusca.setFont(StyleConstants.FONT_BOLD);
@@ -155,11 +150,9 @@ public class TelaMeusItens extends JPanel {
         
         campoBusca = new JTextField(20);
         campoBusca.setFont(StyleConstants.FONT);
-        campoBusca.setToolTipText("Digite o título, autor ou gênero para buscar");
         gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
         painelFiltros.add(campoBusca, gbc);
         
-        // Filtro por tipo
         JLabel lblTipo = new JLabel("Tipo:");
         lblTipo.setFont(StyleConstants.FONT_BOLD);
         lblTipo.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -171,10 +164,8 @@ public class TelaMeusItens extends JPanel {
         gbc.gridx = 3;
         painelFiltros.add(comboTipo, gbc);
         
-        // Segunda linha de filtros
         gbc.gridy = 2;
         
-        // Filtro por gênero
         JLabel lblGenero = new JLabel("Gênero:");
         lblGenero.setFont(StyleConstants.FONT_BOLD);
         lblGenero.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -184,16 +175,12 @@ public class TelaMeusItens extends JPanel {
         Genero[] generosEnum = Genero.values();
         String[] generosParaCombo = new String[generosEnum.length + 1];
         generosParaCombo[0] = "Todos";
-        for (int i = 0; i < generosEnum.length; i++) {
-            generosParaCombo[i + 1] = generosEnum[i].toString(); 
-        }
+        for (int i = 0; i < generosEnum.length; i++) { generosParaCombo[i + 1] = generosEnum[i].toString(); }
         comboGenero = new JComboBox<>(generosParaCombo);
-
         comboGenero.setFont(StyleConstants.FONT);
         gbc.gridx = 1;
         painelFiltros.add(comboGenero, gbc);
         
-        // Filtro por avaliação
         JLabel lblAvaliacao = new JLabel("Avaliação:");
         lblAvaliacao.setFont(StyleConstants.FONT_BOLD);
         lblAvaliacao.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -205,10 +192,8 @@ public class TelaMeusItens extends JPanel {
         gbc.gridx = 3;
         painelFiltros.add(comboAvaliacao, gbc);
         
-        // Terceira linha
         gbc.gridy = 3;
         
-        // Filtro por status
         JLabel lblStatus = new JLabel("Status:");
         lblStatus.setFont(StyleConstants.FONT_BOLD);
         lblStatus.setForeground(StyleConstants.PRIMARY_COLOR);
@@ -220,7 +205,6 @@ public class TelaMeusItens extends JPanel {
         gbc.gridx = 1;
         painelFiltros.add(comboStatus, gbc);
         
-        // Botão limpar filtros
         btnLimparFiltros = new JButton("Limpar Filtros");
         ButtonStyles.applyDefaultStyle(btnLimparFiltros);
         gbc.gridx = 2; gbc.gridwidth = 2;
@@ -229,19 +213,13 @@ public class TelaMeusItens extends JPanel {
         return painelFiltros;
     }
     
+    /** Configura os listeners para os botões e campos de filtro. */
     private void configurarEventos() {
-        // Evento do botão voltar
         btnVoltar.addActionListener(e -> telaPrincipal.voltarParaMenu());
-        
-        // Evento do botão limpar filtros
         btnLimparFiltros.addActionListener(e -> limparFiltros());
         
-        // Eventos para aplicar filtros em tempo real
         campoBusca.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                aplicarFiltros();
-            }
+            @Override public void keyReleased(java.awt.event.KeyEvent evt) { aplicarFiltros(); }
         });
         
         comboTipo.addActionListener(e -> aplicarFiltros());
@@ -250,6 +228,7 @@ public class TelaMeusItens extends JPanel {
         comboStatus.addActionListener(e -> aplicarFiltros());
     }
     
+    /** Combina as listas de livros, ebooks e audiobooks em uma única lista. */
     private void atualizarListaItens() {
         todosItens.clear();
         todosItens.addAll(livros);
@@ -257,23 +236,15 @@ public class TelaMeusItens extends JPanel {
         todosItens.addAll(audiobooks);
     }
     
+    /** Popula a tabela com os dados da lista de todos os itens. */
     private void carregarDadosTabela() {
         modeloTabela.setRowCount(0);
         
         for (Item item : todosItens) {
-            String tipo = "";
-            if (item instanceof Livro) tipo = "Livro";
-            else if (item instanceof Ebook) tipo = "Ebook";
-            else if (item instanceof Audiobook) tipo = "Audiobook";
-            
+            String tipo = item.getTipo(); // Usando o método polimórfico
             Object[] linha = {
-                tipo,
-                item.getTitulo(),
-                item.getAutor(),
-                item.getGenero().toString(),
-                item.getAnoPublicacao(),
-                item.isLido() ? "Lido" : "Não lido",
-                item.getNota().getDescricao()
+                tipo, item.getTitulo(), item.getAutor(), item.getGenero().toString(),
+                item.getAnoPublicacao(), item.isLido() ? "Lido" : "Não lido", item.getNota().getDescricao()
             };
             modeloTabela.addRow(linha);
         }
@@ -281,55 +252,41 @@ public class TelaMeusItens extends JPanel {
         atualizarContadorItens();
     }
     
+    /** Aplica os filtros selecionados à tabela de itens. */
     private void aplicarFiltros() {
         List<RowFilter<Object, Object>> filtros = new ArrayList<>();
         
-        // Filtro de busca por texto
         String textoBusca = campoBusca.getText().trim();
         if (!textoBusca.isEmpty()) {
-            RowFilter<Object, Object> filtroTexto = RowFilter.regexFilter("(?i)" + textoBusca, 1, 2, 3);
-            filtros.add(filtroTexto);
+            filtros.add(RowFilter.regexFilter("(?i)" + textoBusca, 1, 2, 3));
         }
         
-        // Filtro por tipo
         String tipoSelecionado = (String) comboTipo.getSelectedItem();
-        if (!tipoSelecionado.equals("Todos")) {
-            RowFilter<Object, Object> filtroTipo = RowFilter.regexFilter(tipoSelecionado, 0);
-            filtros.add(filtroTipo);
+        if (!"Todos".equals(tipoSelecionado)) {
+            filtros.add(RowFilter.regexFilter(tipoSelecionado, 0));
         }
         
-        // Filtro por gênero
         String generoSelecionado = (String) comboGenero.getSelectedItem();
-        if (!generoSelecionado.equals("Todos")) {
-            RowFilter<Object, Object> filtroGenero = RowFilter.regexFilter(generoSelecionado, 3);
-            filtros.add(filtroGenero);
+        if (!"Todos".equals(generoSelecionado)) {
+            filtros.add(RowFilter.regexFilter(generoSelecionado, 3));
         }
         
-        // Filtro por avaliação
         String avaliacaoSelecionada = (String) comboAvaliacao.getSelectedItem();
-        if (!avaliacaoSelecionada.equals("Todas")) {
-            RowFilter<Object, Object> filtroAvaliacao = RowFilter.regexFilter(avaliacaoSelecionada, 6);
-            filtros.add(filtroAvaliacao);
+        if (!"Todas".equals(avaliacaoSelecionada)) {
+            filtros.add(RowFilter.regexFilter(avaliacaoSelecionada, 6));
         }
         
-        // Filtro por status
         String statusSelecionado = (String) comboStatus.getSelectedItem();
-        if (!statusSelecionado.equals("Todos")) {
-            RowFilter<Object, Object> filtroStatus = RowFilter.regexFilter(statusSelecionado, 5);
-            filtros.add(filtroStatus);
+        if (!"Todos".equals(statusSelecionado)) {
+            filtros.add(RowFilter.regexFilter(statusSelecionado, 5));
         }
         
-        // Aplicar filtros
-        if (filtros.isEmpty()) {
-            sorter.setRowFilter(null);
-        } else {
-            RowFilter<Object, Object> filtroComposto = RowFilter.andFilter(filtros);
-            sorter.setRowFilter(filtroComposto);
-        }
+        sorter.setRowFilter(filtros.isEmpty() ? null : RowFilter.andFilter(filtros));
         
         atualizarContadorItens();
     }
     
+    /** Reseta todos os campos de filtro e exibe todos os itens. */
     private void limparFiltros() {
         campoBusca.setText("");
         comboTipo.setSelectedIndex(0);
@@ -340,6 +297,7 @@ public class TelaMeusItens extends JPanel {
         atualizarContadorItens();
     }
     
+    /** Atualiza o rótulo que exibe o número de itens visíveis. */
     private void atualizarContadorItens() {
         int totalVisivel = tabelaItens.getRowCount();
         int totalGeral = todosItens.size();
@@ -351,28 +309,16 @@ public class TelaMeusItens extends JPanel {
         }
     }
     
-    // Métodos públicos para atualizar dados externamente
-    public void atualizarDados(List<Livro> livros, List<Ebook> ebooks, List<Audiobook> audiobooks) {
-        this.livros = livros;
-        this.ebooks = ebooks;
-        this.audiobooks = audiobooks;
-        atualizarListaItens();
-        carregarDadosTabela();
-    }
-    
-    public void refresh() {
-        atualizarListaItens();
-        carregarDadosTabela();
-    }
-    
-    // Método para obter o item selecionado na tabela
+    /** @return O item selecionado na tabela. */
     public Item getItemSelecionado() {
         int linhaSelecionada = tabelaItens.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            return null;
-        }
+        if (linhaSelecionada == -1) return null;
         
         int linhaReal = tabelaItens.convertRowIndexToModel(linhaSelecionada);
-        return todosItens.get(linhaReal);
+        // Evita IndexOutOfBoundsException se a lista for modificada
+        if (linhaReal >= 0 && linhaReal < todosItens.size()) {
+            return todosItens.get(linhaReal);
+        }
+        return null;
     }
 }
