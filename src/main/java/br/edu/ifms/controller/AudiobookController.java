@@ -11,6 +11,10 @@ import br.edu.ifms.view.panels.PainelAudiobook;
 
 import java.util.List;
 
+/**
+ * Controlador responsável pela lógica de interação entre a view PainelAudiobook
+ * e a lista de audiobooks.
+ */
 public class AudiobookController {
 
     private PainelAudiobook view;
@@ -21,6 +25,10 @@ public class AudiobookController {
         this.audiobooks = audiobooks;
     }
 
+    /**
+     * Inicializa os eventos da interface gráfica.
+     * Configura os botões e a tabela.
+     */
     public void initController() {
         view.getBtnNovo().addActionListener(e -> view.limparCampos());
         view.getBtnCancelar().addActionListener(e -> view.limparCampos());
@@ -33,13 +41,20 @@ public class AudiobookController {
         });
     }
 
+    /**
+     * Remove o audiobook selecionado da tabela e da lista.
+     * Exibe um aviso se nenhum item estiver selecionado.
+     */
     private void removerAudiobook() {
         try {
             Validador.validarItemSelecionado(view.getTabelaAudiobooks());
 
             int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
             int id = (Integer) view.getModeloAudiobooks().getValueAt(linhaSelecionada, 0);
+            
+            // Remove o audiobook com o ID correspondente
             audiobooks.removeIf(audiobook -> audiobook.getId() == id);
+            
             view.getAtualizarTabelaCallback().accept("audiobook");
             view.limparCampos();
 
@@ -48,27 +63,33 @@ public class AudiobookController {
         }
     }
 
+    /**
+     * Salva ou atualiza um audiobook.
+     * Valida os campos obrigatórios e formatos antes de prosseguir.
+     */
     private void salvarAudiobook() {
         try {
+            // Coleta dados do formulário
             String titulo = view.getTxtTitulo().getText();
             String autor = view.getTxtAutor().getText();
             String anoStr = view.getTxtAno().getText();
             String duracaoStr = view.getTxtDuracaoMinutos().getText();
             String narrador = view.getTxtNarrador().getText();
-            
-            Validador.validarCamposObrigatorios(titulo, autor, anoStr, duracaoStr, narrador);
 
+            // Validação dos campos
+            Validador.validarCamposObrigatorios(titulo, autor, anoStr, duracaoStr, narrador);
             int ano = Validador.validarFormatoInteiro(anoStr);
             int duracao = Validador.validarFormatoInteiro(duracaoStr);
-            
             Validador.validarAno(ano);
             Validador.validarDuracaoAudiobook(duracao);
-            
+
+            // Coleta campos opcionais
             Genero genero = (Genero) view.getComboGenero().getSelectedItem();
             String descricao = view.getTxtDescricao().getText();
             int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
-            
+
             if (linhaSelecionada >= 0) {
+                // Atualiza audiobook existente
                 int id = (Integer) view.getModeloAudiobooks().getValueAt(linhaSelecionada, 0);
                 for (Audiobook audiobook : audiobooks) {
                     if (audiobook.getId() == id) {
@@ -83,9 +104,11 @@ public class AudiobookController {
                     }
                 }
             } else {
+                // Cria novo audiobook
                 Audiobook novo = new Audiobook(titulo, autor, ano, genero, descricao, duracao, narrador);
                 audiobooks.add(novo);
             }
+
             view.getAtualizarTabelaCallback().accept("audiobook");
             view.limparCampos();
 
@@ -96,7 +119,9 @@ public class AudiobookController {
         }
     }
 
-
+    /**
+     * Preenche o formulário com os dados do audiobook selecionado na tabela.
+     */
     private void preencherFormularioComAudiobookSelecionado() {
         int selectedRow = view.getTabelaAudiobooks().getSelectedRow();
         if (selectedRow != -1) {

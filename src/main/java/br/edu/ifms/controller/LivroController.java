@@ -21,11 +21,16 @@ public class LivroController {
         this.livros = livros;
     }
 
+    /**
+     * Inicializa os eventos dos botões e seleção da tabela.
+     */
     public void initController() {
         view.getBtnNovo().addActionListener(e -> view.limparCampos());
         view.getBtnCancelar().addActionListener(e -> view.limparCampos());
         view.getBtnRemover().addActionListener(e -> removerLivro());
         view.getBtnAtualizar().addActionListener(e -> salvarLivro());
+
+        // Quando uma linha da tabela é selecionada, preenche o formulário com os dados
         view.getTabelaLivros().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 preencherFormularioComLivroSelecionado();
@@ -33,13 +38,19 @@ public class LivroController {
         });
     }
 
+    /**
+     * Remove o livro selecionado da lista e atualiza a tabela.
+     */
     private void removerLivro() {
         try {
             Validador.validarItemSelecionado(view.getTabelaLivros());
 
             int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
             int id = (Integer) view.getModeloLivros().getValueAt(linhaSelecionada, 0);
+
+            // Remove o livro da lista com base no ID
             livros.removeIf(livro -> livro.getId() == id);
+
             view.getAtualizarTabelaCallback().accept("livro");
             view.limparCampos();
 
@@ -48,27 +59,32 @@ public class LivroController {
         }
     }
 
+    /**
+     * Salva um novo livro ou atualiza um existente com os dados do formulário.
+     */
     private void salvarLivro() {
         try {
+            // Captura os dados dos campos da view
             String titulo = view.getTxtTitulo().getText();
             String autor = view.getTxtAutor().getText();
             String anoStr = view.getTxtAno().getText();
             String paginasStr = view.getTxtPaginas().getText();
             String isbn = view.getTxtIsbn().getText();
 
+            // Validação de obrigatoriedade e formato
             Validador.validarCamposObrigatorios(titulo, autor, anoStr, paginasStr);
-            
             int ano = Validador.validarFormatoInteiro(anoStr);
             int paginas = Validador.validarFormatoInteiro(paginasStr);
-
             Validador.validarAno(ano);
             Validador.validarNumeroPositivo(paginas);
-            
+
+            // Dados adicionais
             Genero genero = (Genero) view.getComboGenero().getSelectedItem();
             String descricao = view.getTxtDescricao().getText();
             int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
 
             if (linhaSelecionada >= 0) {
+                // Atualiza livro existente
                 int id = (Integer) view.getModeloLivros().getValueAt(linhaSelecionada, 0);
                 for (Livro livro : livros) {
                     if (livro.getId() == id) {
@@ -83,29 +99,40 @@ public class LivroController {
                     }
                 }
             } else {
+                // Cria novo livro
                 Livro novo = new Livro(titulo, autor, ano, genero, descricao, paginas, isbn);
                 livros.add(novo);
             }
+
             view.getAtualizarTabelaCallback().accept("livro");
             view.limparCampos();
 
         } catch (CampoObrigatorioException | FormatoInvalidoException | CampoInvalidoException e) {
+            // Exibe erro de validação
             view.displayError(e.getMessage());
         } catch (Exception e) {
+            // Exibe erro inesperado
             view.displayError("Ocorreu um erro inesperado ao salvar: " + e.getMessage());
         }
     }
 
+    /**
+     * Preenche o formulário com os dados do livro selecionado na tabela.
+     */
     private void preencherFormularioComLivroSelecionado() {
         int selectedRow = view.getTabelaLivros().getSelectedRow();
+
         if (selectedRow != -1) {
             int idSelecionado = (Integer) view.getModeloLivros().getValueAt(selectedRow, 0);
+
+            // Busca o livro na lista pelo ID
             Livro livroSelecionado = livros.stream()
-                                          .filter(l -> l.getId() == idSelecionado)
-                                          .findFirst()
-                                          .orElse(null);
+                .filter(l -> l.getId() == idSelecionado)
+                .findFirst()
+                .orElse(null);
 
             if (livroSelecionado != null) {
+                // Preenche os campos com os dados do livro
                 view.getTxtTitulo().setText(livroSelecionado.getTitulo());
                 view.getTxtAutor().setText(livroSelecionado.getAutor());
                 view.getTxtAno().setText(String.valueOf(livroSelecionado.getAnoPublicacao()));
