@@ -1,8 +1,10 @@
 // src/main/java/br/edu/ifms/model/Genero.java
 package br.edu.ifms.model;
 
-
-// Enumeração para representar os possíveis genêros de um item na biblioteca, facilitando a padronização e evitando erros de digitação.
+/**
+ * Enumeração para os gêneros de um item da biblioteca.
+ * Padroniza a classificação e evita erros de digitação.
+ */
 public enum Genero {
     FICCAO,
     NAO_FICCAO,
@@ -26,14 +28,11 @@ public enum Genero {
     OUTROS;
 
     /**
-     * Retorna uma representação legível do gênero, substituindo underscores por espaços.
-     * Ex: FICCAO_CIENTIFICA se torna "Ficção Científica".
-     *
-     * @return O nome do gênero formatado.
+     * Retorna o nome do gênero formatado de forma legível (ex: "Ficção Científica").
+     * @return O nome formatado.
      */
     @Override
     public String toString() {
-        // Converte para minúsculas, substitui '_' por ' ' e capitaliza a primeira letra de cada palavra
         String name = name().toLowerCase().replace('_', ' ');
         StringBuilder formattedName = new StringBuilder();
         boolean capitalizeNext = true;
@@ -51,8 +50,8 @@ public enum Genero {
         return formattedName.toString();
     }
 
+    /** @return A descrição do gênero (sinônimo de toString()). */
     public String getDescricao() {
-    return this.toString();
+        return this.toString();
     }
-
 }

@@ -4,89 +4,30 @@ package br.edu.ifms.model;
 import java.util.Objects;
 
 /**
- * Classe abstrata que representa um item de biblioteca digital.
- * 
- * Esta classe define os atributos e comportamentos comuns a todos os tipos
- * de itens que podem ser gerenciados no sistema (livros, e-books, audiobooks, etc.).
- * 
- * Características principais:
- * - Geração automática de IDs únicos
- * - Controle de status de leitura
- * - Sistema de avaliação por notas
- * - Informações bibliográficas básicas
+ * Classe abstrata que representa um item da biblioteca.
+ * Define atributos e comportamentos comuns a todos os itens.
  */
 public abstract class Item {
     
-    /**
-     * Contador estático para geração automática de IDs únicos.
-     * Incrementado a cada nova instância criada.
-     */
-    private static int proxId = 1;
+    private static int proxId = 1; // Contador estático para geração de IDs únicos.
+
+    protected int id; // Identificador único do item.
+    protected String titulo; // Título do item.
+    protected String autor; // Autor do item.
+    protected int anoPublicacao; // Ano de publicação do item.
+    protected Genero genero; // Gênero literário do item.
+    protected String descricao; // Descrição ou sinopse do item.
+    protected boolean lido; // Status de leitura (true se lido, false caso contrário).
+    protected Nota nota; // Avaliação atribuída ao item.
 
     /**
-     * Identificador único do item.
-     * Gerado automaticamente no momento da criação.
-     */
-    protected int id;
-    
-    /**
-     * Título do item.
-     * Não pode ser nulo ou vazio após a criação.
-     */
-    protected String titulo;
-    
-    /**
-     * Nome do autor ou criador do item.
-     * Pode incluir múltiplos autores separados por vírgula.
-     */
-    protected String autor;
-    
-    /**
-     * Ano de publicação do item.
-     * Deve ser um valor positivo e realista.
-     */
-    protected int anoPublicacao;
-    
-    /**
-     * Gênero literário ou categoria do item.
-     * Utiliza o enum Genero para garantir valores válidos.
-     */
-    protected Genero genero;
-    
-    /**
-     * Descrição ou sinopse do item.
-     * Fornece informações adicionais sobre o conteúdo.
-     */
-    protected String descricao;
-    
-    /**
-     * Status de leitura do item.
-     * true = já foi lido, false = ainda não foi lido.
-     * Inicializado como false por padrão.
-     */
-    protected boolean lido;
-    
-    /**
-     * Avaliação ou nota atribuída ao item.
-     * Utiliza o enum Nota para padronizar as avaliações.
-     * Inicializado como NAO_AVALIADO por padrão.
-     */
-    protected Nota nota;
-
-    /**
-     * Construtor para inicializar um novo Item.
-     * 
-     * O ID é gerado automaticamente de forma incremental.
-     * O status de leitura é inicializado como false.
-     * A nota é inicializada como NAO_AVALIADO.
+     * Construtor do Item.
      *
-     * @param titulo        O título do item (não pode ser null ou vazio)
-     * @param autor         O autor do item (não pode ser null ou vazio)
-     * @param anoPublicacao O ano de publicação (deve ser um valor positivo)
-     * @param genero        O gênero do item (deve ser um valor válido do enum Genero)
-     * @param descricao     A descrição ou sinopse do item (pode ser null ou vazio)
-     * 
-     * @throws IllegalArgumentException se algum parâmetro obrigatório for inválido
+     * @param titulo        Título do item.
+     * @param autor         Autor do item.
+     * @param anoPublicacao Ano de publicação.
+     * @param genero        Gênero do item.
+     * @param descricao     Descrição do item.
      */
     public Item(String titulo, String autor, int anoPublicacao, Genero genero, String descricao) {
         this.id = proxId++;
@@ -99,217 +40,127 @@ public abstract class Item {
         this.nota = Nota.NAO_AVALIADO;
     }
 
-    // ==================== GETTERS E SETTERS ====================
-
-    /**
-     * Obtém o identificador único do item.
-     * 
-     * @return O ID do item (sempre maior que 0)
-     */
+    /** @return O ID único do item. */
     public int getId() {
         return id;
     }
 
-    /**
-     * Obtém o título do item.
-     * 
-     * @return O título do item
-     */
+    /** @return O título do item. */
     public String getTitulo() {
         return titulo;
     }
 
     /**
-     * Define um novo título para o item.
-     * 
-     * @param titulo O novo título (não deve ser null ou vazio)
+     * Define o título do item.
+     * @param titulo Novo título.
      */
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    /**
-     * Obtém o autor do item.
-     * 
-     * @return O nome do autor
-     */
+    /** @return O autor do item. */
     public String getAutor() {
         return autor;
     }
 
     /**
-     * Define um novo autor para o item.
-     * 
-     * @param autor O novo autor (não deve ser null ou vazio)
+     * Define o autor do item.
+     * @param autor Novo autor.
      */
     public void setAutor(String autor) {
         this.autor = autor;
     }
 
-    /**
-     * Obtém o ano de publicação do item.
-     * 
-     * @return O ano de publicação
-     */
+    /** @return O ano de publicação do item. */
     public int getAnoPublicacao() {
         return anoPublicacao;
     }
 
     /**
-     * Define um novo ano de publicação para o item.
-     * 
-     * @param anoPublicacao O novo ano de publicação (deve ser positivo)
+     * Define o ano de publicação.
+     * @param anoPublicacao Novo ano.
      */
     public void setAnoPublicacao(int anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
     }
 
-    /**
-     * Obtém o gênero do item.
-     * 
-     * @return O gênero do item (valor do enum Genero)
-     */
+    /** @return O gênero do item. */
     public Genero getGenero() {
         return genero;
     }
 
     /**
-     * Define um novo gênero para o item.
-     * 
-     * @param genero O novo gênero (deve ser um valor válido do enum Genero)
+     * Define o gênero do item.
+     * @param genero Novo gênero.
      */
     public void setGenero(Genero genero) {
         this.genero = genero;
     }
 
-    /**
-     * Obtém a descrição do item.
-     * 
-     * @return A descrição ou sinopse do item
-     */
+    /** @return A descrição do item. */
     public String getDescricao() {
         return descricao;
     }
 
     /**
-     * Define uma nova descrição para o item.
-     * 
-     * @param descricao A nova descrição (pode ser null ou vazia)
+     * Define a descrição do item.
+     * @param descricao Nova descrição.
      */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    /**
-     * Verifica se o item já foi lido.
-     * 
-     * @return true se o item foi lido, false caso contrário
-     */
+    /** @return true se o item foi lido, false caso contrário. */
     public boolean isLido() {
         return lido;
     }
 
     /**
-     * Define o status de leitura do item.
-     * 
-     * Comportamento especial: Se o item for marcado como "não lido" (false),
-     * a avaliação é automaticamente resetada para NAO_AVALIADO, pois não
-     * faz sentido manter uma avaliação de algo que não foi lido.
-     * 
-     * @param lido true se o item foi lido, false caso contrário
+     * Define o status de leitura. Se "não lido", a nota é resetada.
+     * @param lido Novo status de leitura.
      */
     public void setLido(boolean lido) {
         this.lido = lido;
-
-        // Reset da avaliação quando marcado como não lido
         if (!lido) {
             this.nota = Nota.NAO_AVALIADO;
         }
     }
 
-    /**
-     * Obtém a avaliação atual do item.
-     * 
-     * @return A nota/avaliação do item (valor do enum Nota)
-     */
+    /** @return A avaliação do item. */
     public Nota getNota() {
         return nota;
     }
 
     /**
-     * Define uma nova avaliação para o item.
-     * 
-     * IMPORTANTE: Este método apenas define a nota. A validação de regras
-     * de negócio (como verificar se o item foi lido antes de avaliar)
-     * deve ser implementada na camada de serviço (Service Layer).
-     * 
-     * Esta separação de responsabilidades mantém o modelo limpo e
-     * centraliza a lógica de negócio nos serviços apropriados.
-     *
-     * @param nota A nova avaliação (deve ser um valor válido do enum Nota)
+     * Define a avaliação do item.
+     * @param nota Nova avaliação.
      */
     public void setNota(Nota nota) {
         this.nota = nota;
     }
 
-    // ==================== MÉTODOS ABSTRATOS ====================
-
     /**
-     * Obtém o tipo específico do item.
-     * 
-     * Este método deve ser implementado por cada subclasse concreta
-     * (Livro, Ebook, Audiobook, etc.) para retornar uma string
-     * que identifique o tipo específico do item.
-     * 
-     * Exemplos de retorno esperados:
-     * - "Livro Físico"
-     * - "E-book"
-     * - "Audiobook"
-     * - "Revista"
-     *
-     * @return Uma string representando o tipo específico do item
+     * Método abstrato para obter o tipo específico do item (Livro, Ebook, etc.).
+     * @return O tipo do item como String.
      */
     public abstract String getTipo();
 
-    // ==================== MÉTODOS SOBRESCRITOS ====================
-
     /**
-     * Compara dois objetos Item para verificar se são iguais.
-     * 
-     * A comparação é baseada exclusivamente no ID do item, pois
-     * cada item possui um identificador único. Isso garante que
-     * dois itens sejam considerados iguais apenas se tiverem o
-     * mesmo ID, independentemente de outros atributos.
-     * 
-     * Este método é essencial para o correto funcionamento de
-     * estruturas de dados como Collections (contains, remove, etc.).
-     * 
-     * @param o Objeto a ser comparado com este item
-     * @return true se os objetos possuem o mesmo ID, false caso contrário
+     * Compara este item com outro objeto. A igualdade é baseada apenas no ID.
+     * @param o Objeto a ser comparado.
+     * @return true se os IDs forem iguais, false caso contrário.
      */
     @Override
     public boolean equals(Object o) {
-        // Verifica se é a mesma referência
         if (this == o) return true;
-        
-        // Verifica se o objeto é nulo ou de classe diferente
         if (o == null || getClass() != o.getClass()) return false;
-        
-        // Faz o cast e compara os IDs
         Item item = (Item) o;
         return id == item.id;
     }
 
     /**
-     * Gera o código hash do item baseado no ID.
-     * 
-     * Este método deve ser consistente com equals(): se dois objetos
-     * são iguais segundo equals(), eles devem ter o mesmo hashCode().
-     * 
-     * O uso apenas do ID para o hash garante essa consistência e
-     * otimiza a performance em estruturas como HashMap e HashSet.
-     * 
-     * @return Código hash baseado no ID do item
+     * Gera o código hash para o item, baseado no ID.
+     * @return O código hash.
      */
     @Override
     public int hashCode() {
@@ -317,18 +168,7 @@ public abstract class Item {
     }
 
     /**
-     * Retorna uma representação textual completa do item.
-     * 
-     * Esta representação inclui todos os atributos principais do item
-     * em formato legível, sendo útil para:
-     * - Logs e debug
-     * - Exibição em interfaces de usuário
-     * - Relatórios
-     * - Testes unitários
-     * 
-     * O formato inclui labels descritivos para facilitar a leitura.
-     * 
-     * @return String formatada contendo todos os atributos do item
+     * Retorna os dados completos do item em formato de texto.
      */
     @Override
     public String toString() {
