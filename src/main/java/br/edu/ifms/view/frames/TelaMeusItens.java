@@ -181,9 +181,14 @@ public class TelaMeusItens extends JPanel {
         gbc.gridx = 0;
         painelFiltros.add(lblGenero, gbc);
         
-        String[] generos = {"Todos", "FICCAO", "FANTASIA", "ROMANCE", "MISTERIO", "TERROR", 
-                           "AVENTURA", "BIOGRAFIA", "HISTORIA", "CIENCIA", "AUTOAJUDA", "OUTROS"};
-        comboGenero = new JComboBox<>(generos);
+        Genero[] generosEnum = Genero.values();
+        String[] generosParaCombo = new String[generosEnum.length + 1];
+        generosParaCombo[0] = "Todos";
+        for (int i = 0; i < generosEnum.length; i++) {
+            generosParaCombo[i + 1] = generosEnum[i].toString(); 
+        }
+        comboGenero = new JComboBox<>(generosParaCombo);
+
         comboGenero.setFont(StyleConstants.FONT);
         gbc.gridx = 1;
         painelFiltros.add(comboGenero, gbc);
@@ -265,7 +270,7 @@ public class TelaMeusItens extends JPanel {
                 tipo,
                 item.getTitulo(),
                 item.getAutor(),
-                item.getGenero().name(),
+                item.getGenero().toString(),
                 item.getAnoPublicacao(),
                 item.isLido() ? "Lido" : "Não lido",
                 item.getNota().getDescricao()
