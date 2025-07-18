@@ -80,24 +80,39 @@ public class PainelAudiobook {
         gbc.gridx = 1; gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL; painelFormulario.add(txtNarrador, gbc);
         painel.add(painelFormulario, BorderLayout.NORTH);
 
-        // --- Painel da Tabela ---
+    // --- Painel da Tabela ---
         JPanel painelTabelaContainer = new JPanel(new BorderLayout());
         painelTabelaContainer.setBackground(StyleConstants.SECONDARY_COLOR);
         painelTabelaContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
         JLabel tituloTabela = new JLabel("Lista de Audiobooks");
         tituloTabela.setFont(StyleConstants.FONT_BOLD);
         tituloTabela.setForeground(StyleConstants.PRIMARY_COLOR);
         tituloTabela.setHorizontalAlignment(SwingConstants.CENTER);
         painelTabelaContainer.add(tituloTabela, BorderLayout.NORTH);
+
         String[] colunas = {"ID", "Título", "Autor", "Lido", "Avaliação"};
         modeloAudiobooks = new DefaultTableModel(colunas, 0) {
-            @Override public boolean isCellEditable(int row, int column) { return false; }
+            @Override public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
+
         tabelaAudiobooks = new JTable(modeloAudiobooks);
         tabelaAudiobooks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // --- Estilização ---
+        tabelaAudiobooks.setFont(StyleConstants.FONT); // Fonte das células
+        tabelaAudiobooks.setRowHeight(25); // Altura das linhas
+        tabelaAudiobooks.getTableHeader().setFont(StyleConstants.FONT_BOLD); // Fonte do cabeçalho
+        tabelaAudiobooks.getTableHeader().setBackground(StyleConstants.PRIMARY_COLOR); // Cor de fundo do cabeçalho
+        tabelaAudiobooks.getTableHeader().setForeground(StyleConstants.SECONDARY_COLOR); // Cor da fonte do cabeçalho
+
         JScrollPane scrollPane = new JScrollPane(tabelaAudiobooks);
         scrollPane.setPreferredSize(new Dimension(750, 200));
         painelTabelaContainer.add(scrollPane, BorderLayout.CENTER);
+
+        // Adiciona ao painel principal
         painel.add(painelTabelaContainer, BorderLayout.CENTER);
 
         // --- Painel de Botões ---
@@ -182,3 +197,4 @@ public class PainelAudiobook {
     /** @return O botão "Cancelar". */
     public JButton getBtnCancelar() { return btnCancelar; }
 }
+

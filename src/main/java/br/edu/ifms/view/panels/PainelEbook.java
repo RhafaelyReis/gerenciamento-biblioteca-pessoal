@@ -81,21 +81,34 @@ public class PainelEbook {
         JPanel painelTabelaContainer = new JPanel(new BorderLayout());
         painelTabelaContainer.setBackground(StyleConstants.SECONDARY_COLOR);
         painelTabelaContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
         JLabel tituloTabela = new JLabel("Lista de Ebooks");
         tituloTabela.setFont(StyleConstants.FONT_BOLD);
         tituloTabela.setForeground(StyleConstants.PRIMARY_COLOR);
         tituloTabela.setHorizontalAlignment(SwingConstants.CENTER);
         painelTabelaContainer.add(tituloTabela, BorderLayout.NORTH);
+
         String[] colunas = {"ID", "Título", "Autor", "Lido", "Avaliação"};
         modeloEbooks = new DefaultTableModel(colunas, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
+
         tabelaEbooks = new JTable(modeloEbooks);
         tabelaEbooks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // --- Estilo ---
+        tabelaEbooks.setFont(StyleConstants.FONT);
+        tabelaEbooks.setRowHeight(25);
+        tabelaEbooks.getTableHeader().setFont(StyleConstants.FONT_BOLD);
+        tabelaEbooks.getTableHeader().setBackground(StyleConstants.PRIMARY_COLOR);
+        tabelaEbooks.getTableHeader().setForeground(StyleConstants.SECONDARY_COLOR);
+
         JScrollPane scrollPane = new JScrollPane(tabelaEbooks);
         scrollPane.setPreferredSize(new Dimension(750, 200));
         painelTabelaContainer.add(scrollPane, BorderLayout.CENTER);
+
         painel.add(painelTabelaContainer, BorderLayout.CENTER);
+
         
         // --- Painel de Botões ---
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
