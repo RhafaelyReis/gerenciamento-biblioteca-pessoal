@@ -21,30 +21,21 @@ public class GerenciarItensController {
 
     public void initController() {
         view.getBtnVoltar().addActionListener(e -> view.getTelaPrincipal().voltarParaMenu());
-
-        // Ação do botão foi centralizada em um único método mais inteligente
         view.getBtnMarcarLidoLivro().addActionListener(e -> gerenciarStatusLeitura("livro"));
         view.getBtnMarcarLidoEbook().addActionListener(e -> gerenciarStatusLeitura("ebook"));
         view.getBtnMarcarLidoAudiobook().addActionListener(e -> gerenciarStatusLeitura("audiobook"));
 
-        // ===== NOVA LÓGICA =====
-        // Adiciona listeners para atualizar o texto do botão em tempo real
         addTableSelectionListeners();
 
-        // Inicializa os controllers dos painéis de formulário
         new LivroController(view.getPainelLivro(), livros).initController();
         new EbookController(view.getPainelEbook(), ebooks).initController();
         new AudiobookController(view.getPainelAudiobook(), audiobooks).initController();
         
-        // Garante que o estado inicial dos botões esteja correto
         atualizarBotaoLido("livro");
         atualizarBotaoLido("ebook");
         atualizarBotaoLido("audiobook");
     }
 
-    /**
-     * Adiciona listeners às tabelas para atualizar dinamicamente o botão de "Marcar Lido".
-     */
     private void addTableSelectionListeners() {
         view.getTabelaLivros().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -63,10 +54,6 @@ public class GerenciarItensController {
         });
     }
 
-    /**
-     * Atualiza o texto do botão com base no status do item selecionado.
-     * @param tipo O tipo de item (livro, ebook, audiobook).
-     */
     private void atualizarBotaoLido(String tipo) {
         JTable tabela = getTabelaPorTipo(tipo);
         JButton botao = getBotaoPorTipo(tipo);
@@ -92,11 +79,6 @@ public class GerenciarItensController {
         }
     }
     
-    /**
-     * Gerencia o status de leitura de um item. Permite marcar como lido,
-     * marcar como não lido e alterar a avaliação de itens já lidos.
-     * @param tipo O tipo de item (livro, ebook, audiobook).
-     */
     private void gerenciarStatusLeitura(String tipo) {
         JTable tabela = getTabelaPorTipo(tipo);
         List<? extends Item> lista = getListaPorTipo(tipo);
@@ -113,7 +95,6 @@ public class GerenciarItensController {
 
         if (itemSelecionado == null) return;
 
-        // Se o item JÁ FOI LIDO, oferece novas opções
         if (itemSelecionado.isLido()) {
             Object[] opcoes = {"Marcar como Não Lido", "Alterar Avaliação", "Cancelar"};
             int escolha = JOptionPane.showOptionDialog(view,
@@ -122,19 +103,19 @@ public class GerenciarItensController {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
 
             switch (escolha) {
-                case 0: // Marcar como Não Lido
+                case 0: 
                     itemSelecionado.setLido(false);
-                    itemSelecionado.setNota(Nota.NAO_AVALIADO); // Remove a avaliação
+                    itemSelecionado.setNota(Nota.NAO_AVALIADO);
                     JOptionPane.showMessageDialog(view, "O item foi marcado como 'Não Lido' e sua avaliação foi removida.");
                     break;
-                case 1: // Alterar Avaliação
-                    abrirTelaAvaliacao(itemSelecionado);
+                case 1: 
+                    abrirTelaAvaliacao(itemSelecionado, "Alterar Avaliação");
                     break;
-                case 2: // Cancelar
+                case 2:
                 default:
-                    return; // Nenhuma ação
+                    return;
             }
-        } else { // Se o item NÃO FOI LIDO, executa a lógica original
+        } else {
             int confirmacao = JOptionPane.showConfirmDialog(view,
                 "Deseja marcar '" + itemSelecionado.getTitulo() + "' como lido?",
                 "Confirmar", JOptionPane.YES_NO_OPTION);
@@ -145,14 +126,21 @@ public class GerenciarItensController {
             }
         }
         
-        view.atualizarTabela(tipo); 
-        // Força a atualização do botão após a ação
+        view.atualizarTabela(tipo);
         SwingUtilities.invokeLater(() -> atualizarBotaoLido(tipo));
     }
 
+    // ===== MÉTODO DE CONVENIÊNCIA (SOBRECARGA) =====
+    /**
+     * Abre a tela de avaliação com um título padrão.
+     * @param item O item a ser avaliado.
+     */
     private void abrirTelaAvaliacao(Item item) {
+        abrirTelaAvaliacao(item, "Avaliar Item");
+    }
+
+    private void abrirTelaAvaliacao(Item item, String tituloJanela) {
         String[] opcoes = {"★", "★★", "★★★", "★★★★", "★★★★★"};
-        // Pré-seleciona a avaliação atual, se houver
         String avaliacaoAtual = item.getNota().getSimbolo();
         int indiceInicial = -1;
         for (int i = 0; i < opcoes.length; i++) {
@@ -161,11 +149,11 @@ public class GerenciarItensController {
                 break;
             }
         }
-        if (indiceInicial == -1) indiceInicial = 2; // Padrão 3 estrelas se não houver
+        if (indiceInicial == -1) indiceInicial = 2;
 
         String avaliacao = (String) JOptionPane.showInputDialog(view,
             "Como você avalia '" + item.getTitulo() + "'?",
-            "Avaliar Item",
+            tituloJanela, // Usando o parâmetro para o título
             JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[indiceInicial]);
 
         if (avaliacao != null) {
@@ -174,7 +162,6 @@ public class GerenciarItensController {
         }
     }
 
-    // Métodos utilitários para evitar repetição de código
     private JTable getTabelaPorTipo(String tipo) {
         switch (tipo) {
             case "livro": return view.getTabelaLivros();

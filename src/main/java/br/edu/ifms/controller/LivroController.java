@@ -1,5 +1,10 @@
 package br.edu.ifms.controller;
 
+import br.edu.ifms.exception.CampoInvalidoException;
+import br.edu.ifms.exception.CampoObrigatorioException;
+import br.edu.ifms.exception.FormatoInvalidoException;
+import br.edu.ifms.exception.ItemNaoSelecionadoException;
+import br.edu.ifms.exception.Validador;
 import br.edu.ifms.model.Genero;
 import br.edu.ifms.model.Livro;
 import br.edu.ifms.view.panels.PainelLivro;
@@ -29,36 +34,41 @@ public class LivroController {
     }
 
     private void removerLivro() {
-        int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
-        if (linhaSelecionada >= 0) {
+        try {
+            Validador.validarItemSelecionado(view.getTabelaLivros());
+
+            int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
             int id = (Integer) view.getModeloLivros().getValueAt(linhaSelecionada, 0);
             livros.removeIf(livro -> livro.getId() == id);
             view.getAtualizarTabelaCallback().accept("livro");
             view.limparCampos();
-        } else {
-            view.displayWarning("Selecione um livro para remover.");
+
+        } catch (ItemNaoSelecionadoException e) {
+            view.displayWarning(e.getMessage());
         }
     }
 
     private void salvarLivro() {
-        int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
         try {
             String titulo = view.getTxtTitulo().getText();
             String autor = view.getTxtAutor().getText();
-            
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-            
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
-            int paginas = Integer.parseInt(view.getTxtPaginas().getText());
+            String anoStr = view.getTxtAno().getText();
+            String paginasStr = view.getTxtPaginas().getText();
             String isbn = view.getTxtIsbn().getText();
 
+            Validador.validarCamposObrigatorios(titulo, autor, anoStr, paginasStr);
+            
+            int ano = Validador.validarFormatoInteiro(anoStr);
+            int paginas = Validador.validarFormatoInteiro(paginasStr);
+
+            Validador.validarAno(ano);
+            Validador.validarNumeroPositivo(paginas);
+            
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            int linhaSelecionada = view.getTabelaLivros().getSelectedRow();
+
             if (linhaSelecionada >= 0) {
-                // Atualiza livro existente
                 int id = (Integer) view.getModeloLivros().getValueAt(linhaSelecionada, 0);
                 for (Livro livro : livros) {
                     if (livro.getId() == id) {
@@ -73,16 +83,16 @@ public class LivroController {
                     }
                 }
             } else {
-                // Adiciona novo livro
                 Livro novo = new Livro(titulo, autor, ano, genero, descricao, paginas, isbn);
                 livros.add(novo);
             }
             view.getAtualizarTabelaCallback().accept("livro");
             view.limparCampos();
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique Ano e Páginas.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao salvar livro: " + ex.getMessage());
+
+        } catch (CampoObrigatorioException | FormatoInvalidoException | CampoInvalidoException e) {
+            view.displayError(e.getMessage());
+        } catch (Exception e) {
+            view.displayError("Ocorreu um erro inesperado ao salvar: " + e.getMessage());
         }
     }
 

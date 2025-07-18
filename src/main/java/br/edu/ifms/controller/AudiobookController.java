@@ -1,5 +1,10 @@
 package br.edu.ifms.controller;
 
+import br.edu.ifms.exception.CampoInvalidoException;
+import br.edu.ifms.exception.CampoObrigatorioException;
+import br.edu.ifms.exception.FormatoInvalidoException;
+import br.edu.ifms.exception.ItemNaoSelecionadoException;
+import br.edu.ifms.exception.Validador;
 import br.edu.ifms.model.Audiobook;
 import br.edu.ifms.model.Genero;
 import br.edu.ifms.view.panels.PainelAudiobook;
@@ -29,36 +34,41 @@ public class AudiobookController {
     }
 
     private void removerAudiobook() {
-        int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
-        if (linhaSelecionada >= 0) {
+        try {
+            Validador.validarItemSelecionado(view.getTabelaAudiobooks());
+
+            int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
             int id = (Integer) view.getModeloAudiobooks().getValueAt(linhaSelecionada, 0);
             audiobooks.removeIf(audiobook -> audiobook.getId() == id);
             view.getAtualizarTabelaCallback().accept("audiobook");
             view.limparCampos();
-        } else {
-            view.displayWarning("Selecione um audiobook para remover.");
+
+        } catch (ItemNaoSelecionadoException e) {
+            view.displayWarning(e.getMessage());
         }
     }
 
     private void salvarAudiobook() {
-        int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
         try {
             String titulo = view.getTxtTitulo().getText();
             String autor = view.getTxtAutor().getText();
-            
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
-            int duracao = Integer.parseInt(view.getTxtDuracaoMinutos().getText());
+            String anoStr = view.getTxtAno().getText();
+            String duracaoStr = view.getTxtDuracaoMinutos().getText();
             String narrador = view.getTxtNarrador().getText();
             
+            Validador.validarCamposObrigatorios(titulo, autor, anoStr, duracaoStr, narrador);
+
+            int ano = Validador.validarFormatoInteiro(anoStr);
+            int duracao = Validador.validarFormatoInteiro(duracaoStr);
+            
+            Validador.validarAno(ano);
+            Validador.validarDuracaoAudiobook(duracao);
+            
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            int linhaSelecionada = view.getTabelaAudiobooks().getSelectedRow();
+            
             if (linhaSelecionada >= 0) {
-                // Atualiza audiobook existente
                 int id = (Integer) view.getModeloAudiobooks().getValueAt(linhaSelecionada, 0);
                 for (Audiobook audiobook : audiobooks) {
                     if (audiobook.getId() == id) {
@@ -73,18 +83,19 @@ public class AudiobookController {
                     }
                 }
             } else {
-                // Adiciona novo audiobook
                 Audiobook novo = new Audiobook(titulo, autor, ano, genero, descricao, duracao, narrador);
                 audiobooks.add(novo);
             }
             view.getAtualizarTabelaCallback().accept("audiobook");
             view.limparCampos();
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique Ano e Duração.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao salvar audiobook: " + ex.getMessage());
+
+        } catch (CampoObrigatorioException | FormatoInvalidoException | CampoInvalidoException e) {
+            view.displayError(e.getMessage());
+        } catch (Exception e) {
+            view.displayError("Erro ao salvar audiobook: " + e.getMessage());
         }
     }
+
 
     private void preencherFormularioComAudiobookSelecionado() {
         int selectedRow = view.getTabelaAudiobooks().getSelectedRow();

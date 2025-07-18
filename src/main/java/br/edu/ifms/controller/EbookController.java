@@ -1,5 +1,10 @@
 package br.edu.ifms.controller;
 
+import br.edu.ifms.exception.CampoInvalidoException;
+import br.edu.ifms.exception.CampoObrigatorioException;
+import br.edu.ifms.exception.FormatoInvalidoException;
+import br.edu.ifms.exception.ItemNaoSelecionadoException;
+import br.edu.ifms.exception.Validador;
 import br.edu.ifms.model.Ebook;
 import br.edu.ifms.model.Genero;
 import br.edu.ifms.view.panels.PainelEbook;
@@ -29,35 +34,40 @@ public class EbookController {
     }
 
     private void removerEbook() {
-        int linhaSelecionada = view.getTabelaEbooks().getSelectedRow();
-        if (linhaSelecionada >= 0) {
+        try {
+            Validador.validarItemSelecionado(view.getTabelaEbooks());
+
+            int linhaSelecionada = view.getTabelaEbooks().getSelectedRow();
             int id = (Integer) view.getModeloEbooks().getValueAt(linhaSelecionada, 0);
             ebooks.removeIf(ebook -> ebook.getId() == id);
             view.getAtualizarTabelaCallback().accept("ebook");
             view.limparCampos();
-        } else {
-            view.displayWarning("Selecione um ebook para remover.");
+
+        } catch (ItemNaoSelecionadoException e) {
+            view.displayWarning(e.getMessage());
         }
     }
 
+
     private void salvarEbook() {
-        int linhaSelecionada = view.getTabelaEbooks().getSelectedRow();
         try {
             String titulo = view.getTxtTitulo().getText();
             String autor = view.getTxtAutor().getText();
-
-            if (titulo.trim().isEmpty() || autor.trim().isEmpty()) {
-                view.displayWarning("Título e Autor são obrigatórios.");
-                return;
-            }
-
-            int ano = Integer.parseInt(view.getTxtAno().getText());
-            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
-            String descricao = view.getTxtDescricao().getText();
+            String anoStr = view.getTxtAno().getText();
             String dispositivo = view.getTxtDispositivo().getText();
 
+            Validador.validarCamposObrigatorios(titulo, autor, anoStr, dispositivo);
+            
+            int ano = Validador.validarFormatoInteiro(anoStr);
+
+            Validador.validarAno(ano);
+            Validador.validarDispositivoEbook(dispositivo);
+
+            Genero genero = (Genero) view.getComboGenero().getSelectedItem();
+            String descricao = view.getTxtDescricao().getText();
+            int linhaSelecionada = view.getTabelaEbooks().getSelectedRow();
+
             if (linhaSelecionada >= 0) {
-                // Atualiza ebook existente
                 int id = (Integer) view.getModeloEbooks().getValueAt(linhaSelecionada, 0);
                 for (Ebook ebook : ebooks) {
                     if (ebook.getId() == id) {
@@ -71,16 +81,16 @@ public class EbookController {
                     }
                 }
             } else {
-                // Adiciona novo ebook
                 Ebook novo = new Ebook(titulo, autor, ano, genero, descricao, dispositivo);
                 ebooks.add(novo);
             }
             view.getAtualizarTabelaCallback().accept("ebook");
             view.limparCampos();
-        } catch (NumberFormatException ex) {
-            view.displayError("Erro de formato numérico. Verifique o Ano.");
-        } catch (Exception ex) {
-            view.displayError("Erro ao salvar ebook: " + ex.getMessage());
+
+        } catch (CampoObrigatorioException | FormatoInvalidoException | CampoInvalidoException e) {
+            view.displayError(e.getMessage());
+        } catch (Exception e) {
+            view.displayError("Erro ao salvar ebook: " + e.getMessage());
         }
     }
 
